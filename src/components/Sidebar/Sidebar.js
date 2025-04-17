@@ -6,6 +6,9 @@ import NotificationDropdown from "components/Dropdowns/NotificationDropdown.js";
 import UserDropdown from "components/Dropdowns/UserDropdown.js";
 
 export default function Sidebar() {
+
+  const user = {role:"Admin"}; 
+
   const [collapseShow, setCollapseShow] = React.useState("hidden");
   return (
     <>
@@ -24,7 +27,7 @@ export default function Sidebar() {
             className="md:block text-left md:pb-2 text-blueGray-600 mr-0 inline-block whitespace-nowrap text-sm uppercase font-bold p-4 px-0"
             to="/"
           >
-            KARMA JEWELRY
+            FOR ME
           </Link>
           {/* User */}
           <ul className="md:hidden items-center flex flex-wrap list-none">
@@ -84,6 +87,11 @@ export default function Sidebar() {
             {/* Navigation */}
 
             <ul className="md:flex-col md:min-w-full flex flex-col list-none">
+
+
+            
+{user.role === "Admin" && (
+
               <li className="items-center">
                 <Link
                   className={
@@ -105,6 +113,131 @@ export default function Sidebar() {
                   Dashboard
                 </Link>
               </li>
+)}
+
+{user.role === "Admin" && (
+/* Gestion des Produits */
+<li className="items-center">
+      <Link
+        className={
+          "text-xs uppercase py-3 font-bold block " +
+          (window.location.href.indexOf("/admin/products") !== -1
+            ? "text-lightBlue-500 hover:text-lightBlue-600"
+            : "text-blueGray-700 hover:text-blueGray-500")
+        }
+        to="/admin/products"
+      >
+        <i
+          className={
+            "fas fa-cogs mr-2 text-sm " +
+            (window.location.href.indexOf("/admin/products") !== -1
+              ? "opacity-75"
+              : "text-blueGray-300")
+          }
+        ></i>{" "}
+        Product Management
+      </Link>
+    </li>
+)}
+{user.role === "Admin" && (
+    /* Gestion des Commandes */
+    <li className="items-center">
+      <Link
+        className={
+          "text-xs uppercase py-3 font-bold block " +
+          (window.location.href.indexOf("/admin/orders") !== -1
+            ? "text-lightBlue-500 hover:text-lightBlue-600"
+            : "text-blueGray-700 hover:text-blueGray-500")
+        }
+        to="/admin/orders"
+      >
+        <i
+          className={
+            "fas fa-box-open mr-2 text-sm " +
+            (window.location.href.indexOf("/admin/orders") !== -1
+              ? "opacity-75"
+              : "text-blueGray-300")
+          }
+        ></i>{" "}
+        Orders Management
+      </Link>
+    </li>
+
+        )}
+        {user.role === "Admin" && (
+    /* Gestion des Réclamations */
+    <li className="items-center">
+      <Link
+        className={
+          "text-xs uppercase py-3 font-bold block " +
+          (window.location.href.indexOf("/admin/complaints") !== -1
+            ? "text-lightBlue-500 hover:text-lightBlue-600"
+            : "text-blueGray-700 hover:text-blueGray-500")
+        }
+        to="/admin/complaints"
+      >
+        <i
+          className={
+            "fas fa-exclamation-circle mr-2 text-sm " +
+            (window.location.href.indexOf("/admin/complaints") !== -1
+              ? "opacity-75"
+              : "text-blueGray-300")
+          }
+        ></i>{" "}
+        Complaints Management
+      </Link>
+    </li>
+        )}
+        {user.role === "Admin" && (
+
+    /* Gestion des Rapports de Ventes */
+    <li className="items-center">
+      <Link
+        className={
+          "text-xs uppercase py-3 font-bold block " +
+          (window.location.href.indexOf("/admin/reports") !== -1
+            ? "text-lightBlue-500 hover:text-lightBlue-600"
+            : "text-blueGray-700 hover:text-blueGray-500")
+        }
+        to="/admin/reports"
+      >
+        <i
+          className={
+            "fas fa-chart-line mr-2 text-sm " +
+            (window.location.href.indexOf("/admin/reports") !== -1
+              ? "opacity-75"
+              : "text-blueGray-300")
+          }
+        ></i>{" "}
+        Sales Reports
+      </Link>
+    </li>
+        )}
+        {user.role === "Admin" && (
+ /* Gestion des Coupons */
+    <li className="items-center">
+      <Link
+        className={
+          "text-xs uppercase py-3 font-bold block " +
+          (window.location.href.indexOf("/admin/coupons") !== -1
+            ? "text-lightBlue-500 hover:text-lightBlue-600"
+            : "text-blueGray-700 hover:text-blueGray-500")
+        }
+        to="/admin/coupons"
+      >
+        <i
+          className={
+            "fas fa-gift mr-2 text-sm " +
+            (window.location.href.indexOf("/admin/coupons") !== -1
+              ? "opacity-75"
+              : "text-blueGray-300")
+          }
+        ></i>{" "}
+        Coupons Management
+      </Link>
+    </li>
+        )}
+{user.role === "Admin" && (
 
               <li className="items-center">
                 <Link
@@ -127,6 +260,9 @@ export default function Sidebar() {
                   Settings
                 </Link>
               </li>
+)}
+
+{user.role === "Admin" && (
 
               <li className="items-center">
                 <Link
@@ -149,6 +285,9 @@ export default function Sidebar() {
                   Tables
                 </Link>
               </li>
+)}
+
+{user.role === "Admin" && (
 
               <li className="items-center">
                 <Link
@@ -171,6 +310,7 @@ export default function Sidebar() {
                   Maps
                 </Link>
               </li>
+)}
             </ul>
 
             {/* Divider */}
