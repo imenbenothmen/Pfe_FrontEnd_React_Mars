@@ -14,8 +14,8 @@ export default function CardTable({ color }) {
     //3 fct getUsers
     try {
       console.log("data :")
-      await getAllUsers().then((res) => {
-        setUsers(res.data.userList);
+      await getAllUsers().then((res) => {        
+        setUsers(res.data.userListe);
       });
     } catch (error) {
       console.log(error);

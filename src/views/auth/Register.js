@@ -1,8 +1,34 @@
-import React from "react";
+import React, { useState } from 'react';
 import { Link } from "react-router-dom";
+import { addUserClient } from "../../services/ApiUser"; //1 importation
 
 export default function Register() {
+  const [username, setUsername] = useState('');
 
+  const handleChange = (e) => {
+    setUsername(e.target.value);
+  };
+
+  const handleClick = () => {
+    console.log(username);
+ try {
+
+      addUserClient({
+        "username": username,
+        "email": "adededmdfzedzin@example.com",
+        "password": "Admfin@12354",
+        "phone": "29839261",
+        "role": "admin",
+        "user_image": "admin.png"
+      }
+      ).then((res) => {        
+
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    
+  };
   return (
     <>
       <div className="container mx-auto px-4 h-full">
@@ -58,6 +84,8 @@ export default function Register() {
                       type="text"
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Full Name"
+                      value={username}
+                      onChange={handleChange}
                     />
                   </div>
 
@@ -164,7 +192,7 @@ export default function Register() {
                         <a
                           href="#pablo"
                           className="text-lightBlue-500"
-                          onClick={(e) => e.preventDefault()}
+                          
                         >
                           Privacy Policy
                         </a>
@@ -176,6 +204,7 @@ export default function Register() {
                     <button
                       className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
                       type="button"
+                      onClick={handleClick}
                     >
                       Create Account
                     </button>

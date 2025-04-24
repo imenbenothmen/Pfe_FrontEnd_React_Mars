@@ -8,13 +8,19 @@ import { Link } from "react-router-dom";
 
 import IndexDropdown from "components/Dropdowns/IndexDropdown.js";
 
+
+
+
 export default function Navbar(props) {
+
+
   const [navbarOpen, setNavbarOpen] = React.useState(false);
   const [searchVisible, setSearchVisible] = useState(false); // Gérer la visibilité du champ de recherche
   // Fonction pour afficher/masquer le champ de recherche
   const toggleSearch = () => {
     setSearchVisible(!searchVisible);
   };
+
   return (
     <>
       <nav className="top-0 fixed z-50 w-full flex flex-wrap items-center justify-between px-2 py-3 navbar-expand-lg bg-white shadow">
@@ -92,7 +98,13 @@ export default function Navbar(props) {
                 >
                   {/* Icône cercle avec icône utilisateur */}
                   
-                    <i className="fas fa-user text-blueGray-700 text-lg" />
+                
+                    <div>
+                  <Link to="/auth/register"> 
+                     <i className="fas fa-user text-blueGray-700 text-lg"/>
+                     </Link>
+    </div>
+
                   
                   <span className="lg:hidden inline-block ml-2">Login</span>
                 </Link>
