@@ -2,24 +2,37 @@ import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 import { addUserClient } from "../../services/ApiUser"; //1 importation
 
+
 export default function Register() {
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [phone, setPhone] = useState('');
+  
 
   const handleChange = (e) => {
     setUsername(e.target.value);
+    setEmail(e.target.value);
+    setPassword(e.target.value);
+    setPhone(e.target.value);
+    
   };
 
   const handleClick = () => {
     console.log(username);
+    console.log(email);
+    console.log(password);
+    console.log(phone);
+    
  try {
 
       addUserClient({
         "username": username,
-        "email": "adededmdfzedzin@example.com",
-        "password": "Admfin@12354",
-        "phone": "29839261",
-        "role": "admin",
-        "user_image": "admin.png"
+        "email": email,
+        "password":password,
+        "phone": phone,
+       // "role": "admin",
+       //+ "user_image": "admin.png"
       }
       ).then((res) => {        
 
@@ -101,6 +114,8 @@ export default function Register() {
                       type="email"
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Email"
+                      value={email}
+                      onChange={handleChange}
                     />
                   </div>
 
@@ -116,6 +131,25 @@ export default function Register() {
                       type="password"
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Password"
+                      value={password}
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                    {/* Nouveau champ : Numéro de téléphone */}
+                    <div className="relative w-full mb-3">
+                    <label
+                      className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                      htmlFor="phone"
+                    >
+                      Phone Number
+                    </label>
+                    <input
+                      type="tel"
+                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                      placeholder="Phone Number"
+                      value={phone}
+                      onChange={handleChange}
                     />
                   </div>
 
@@ -150,20 +184,7 @@ export default function Register() {
                       placeholder="Delivery Address"
                     />
                   </div>
-                  {/* Nouveau champ : Numéro de téléphone */}
-                  <div className="relative w-full mb-3">
-                    <label
-                      className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                      htmlFor="phone"
-                    >
-                      Phone Number
-                    </label>
-                    <input
-                      type="tel"
-                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="Phone Number"
-                    />
-                  </div>
+                
 
                   {/* ajouter une option où l'utilisateur peut s'abonner à une newsletter sur les nouveaux produits ou promotions.*/}
                   <div>

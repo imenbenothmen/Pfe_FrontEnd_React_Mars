@@ -93,16 +93,16 @@ export default function Navbar(props) {
               {/* Connexion */}
               <li className="flex items-center">
                 <Link
-                  to="/login" // Lien vers la page de connexion
+                  to="/auth/register" // Lien vers la page de connexion
                   className="hover:text-blueGray-500 text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold"
                 >
                   {/* Icône cercle avec icône utilisateur */}
                   
                 
                     <div>
-                  <Link to="/auth/register"> 
+                  
                      <i className="fas fa-user text-blueGray-700 text-lg"/>
-                     </Link>
+                     
     </div>
 
                   

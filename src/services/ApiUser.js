@@ -47,6 +47,10 @@ export async function addUserClient(userData) {
     return await axios.post(`${apiurl}/addUserClient`, userData)
 }
 
+export async function addUserLivreur(userData) {
+    return await axios.post(`${apiurl}/addUserLivreur`, userData)
+}
+
 export async function addUserAdmin(userData) {
     return await axios.post(`${apiurl}/addUserAdmin`, userData)
 }
