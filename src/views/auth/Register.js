@@ -2,46 +2,59 @@ import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 import { addUserClient } from "../../services/ApiUser"; //1 importation
 
-
 export default function Register() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('');
-  
+  const [delivery_address, setDeliveryAddress] = useState('');
+  const [newsletter, setNewsletter] = useState(false);
+  const [privacyPolicy, setPrivacyPolicy] = useState(false);
 
-  const handleChange = (e) => {
-    setUsername(e.target.value);
-    setEmail(e.target.value);
-    setPassword(e.target.value);
-    setPhone(e.target.value);
-    
-  };
+  // Gestionnaires de changements pour chaque champ
+  const handleUsernameChange = (e) => setUsername(e.target.value);
+  const handleEmailChange = (e) => setEmail(e.target.value);
+  const handlePasswordChange = (e) => setPassword(e.target.value);
+  const handlePhoneChange = (e) => setPhone(e.target.value);
+  const handleDeliveryAddressChange = (e) => setDeliveryAddress(e.target.value);
+  const handleNewsletterChange = () => setNewsletter(!newsletter);
+  const handlePrivacyPolicyChange = () => setPrivacyPolicy(!privacyPolicy);
 
   const handleClick = () => {
-    console.log(username);
-    console.log(email);
-    console.log(password);
-    console.log(phone);
-    
- try {
+    // Validation des données
+    if (!username || !email || !password || !phone || !delivery_address) {
+      alert("Please fill in all the fields.");
+      return;
+    }
 
+    if (!privacyPolicy) {
+      alert("You must agree to the Privacy Policy.");
+      return;
+    }
+
+    console.log(username, email, password, phone, delivery_address);
+
+    try {
       addUserClient({
         "username": username,
         "email": email,
-        "password":password,
+        "password": password,
         "phone": phone,
-       // "role": "admin",
-       //+ "user_image": "admin.png"
-      }
-      ).then((res) => {        
-
+        "delivery_address": delivery_address,
+        "newsletter": newsletter, // Ajouter l'option newsletter
+        // "role": "admin",
+        // "user_image": "admin.png"
+      }).then((res) => {
+        // Gérer la réponse ici si nécessaire
+        console.log("User registered:", res);
+      }).catch((error) => {
+        console.error("Error during registration:", error);
       });
     } catch (error) {
-      console.log(error);
+      console.log("Error:", error);
     }
-    
   };
+
   return (
     <>
       <div className="container mx-auto px-4 h-full">
@@ -60,7 +73,7 @@ export default function Register() {
                     type="button"
                   >
                     <img
-                      alt="..."
+                      alt="... "
                       className="w-5 mr-1"
                       src={require("assets/img/icons8-facebook-logo.svg").default}
                     />
@@ -71,7 +84,7 @@ export default function Register() {
                     type="button"
                   >
                     <img
-                      alt="..."
+                      alt="... "
                       className="w-5 mr-1"
                       src={require("assets/img/google.svg").default}
                     />
@@ -98,10 +111,9 @@ export default function Register() {
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Full Name"
                       value={username}
-                      onChange={handleChange}
+                      onChange={handleUsernameChange}
                     />
                   </div>
-
 
                   <div className="relative w-full mb-3">
                     <label
@@ -115,10 +127,9 @@ export default function Register() {
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Email"
                       value={email}
-                      onChange={handleChange}
+                      onChange={handleEmailChange}
                     />
                   </div>
-
 
                   <div className="relative w-full mb-3">
                     <label
@@ -132,12 +143,11 @@ export default function Register() {
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Password"
                       value={password}
-                      onChange={handleChange}
+                      onChange={handlePasswordChange}
                     />
                   </div>
 
-                    {/* Nouveau champ : Numéro de téléphone */}
-                    <div className="relative w-full mb-3">
+                  <div className="relative w-full mb-3">
                     <label
                       className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                       htmlFor="phone"
@@ -149,28 +159,10 @@ export default function Register() {
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Phone Number"
                       value={phone}
-                      onChange={handleChange}
+                      onChange={handlePhoneChange}
                     />
                   </div>
 
-                  {/* Nouveau champ : Numéro de carte de fidélité */}
-                  <div className="relative w-full mb-3">
-                    <label
-                      className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                      htmlFor="numeroCarteFidelite"
-                    >
-                      Loyalty Card Number (Optional)
-                    </label>
-                    <input
-                      type="text"
-                      id="numeroCarteFidelite"
-                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="Loyalty Card Number"
-                    />
-                  </div>
-
-
-                  {/* Nouveau champ : Adresse de livraison */}
                   <div className="relative w-full mb-3">
                     <label
                       className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
@@ -182,17 +174,19 @@ export default function Register() {
                       type="text"
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Delivery Address"
+                      value={delivery_address}
+                      onChange={handleDeliveryAddressChange}
                     />
                   </div>
-                
 
-                  {/* ajouter une option où l'utilisateur peut s'abonner à une newsletter sur les nouveaux produits ou promotions.*/}
                   <div>
                     <label className="inline-flex items-center cursor-pointer">
                       <input
                         id="newsletterSubscription"
                         type="checkbox"
                         className="form-checkbox border-0 rounded text-blueGray-700 ml-1 w-5 h-5 ease-linear transition-all duration-150"
+                        checked={newsletter}
+                        onChange={handleNewsletterChange}
                       />
                       <span className="ml-2 text-sm font-semibold text-blueGray-600">
                         I want to receive updates on new products and promotions
@@ -200,21 +194,18 @@ export default function Register() {
                     </label>
                   </div>
 
-
                   <div>
                     <label className="inline-flex items-center cursor-pointer">
                       <input
                         id="customCheckLogin"
                         type="checkbox"
                         className="form-checkbox border-0 rounded text-blueGray-700 ml-1 w-5 h-5 ease-linear transition-all duration-150"
+                        checked={privacyPolicy}
+                        onChange={handlePrivacyPolicyChange}
                       />
                       <span className="ml-2 text-sm font-semibold text-blueGray-600">
                         I agree with the{" "}
-                        <a
-                          href="#pablo"
-                          className="text-lightBlue-500"
-                          
-                        >
+                        <a href="#pablo" className="text-lightBlue-500">
                           Privacy Policy
                         </a>
                       </span>
@@ -235,10 +226,7 @@ export default function Register() {
             </div>
             <div className="flex flex-wrap mt-6 relative">
               <div className="w-1/2">
-                <Link
-                  to="/auth/forget"
-                  className="text-blueGray-200"
-                >
+                <Link to="/auth/forget" className="text-blueGray-200">
                   <small>Forgot password?</small>
                 </Link>
               </div>
