@@ -7,9 +7,9 @@ const apiurl = 'http://localhost:5000/users'
 // GET requests
 
 export async function getAllUsers() {
-    return await axios.get(`${apiurl}/getAllUsers`)
+    return await axios.get(`${apiurl}/getAllUsers`);
 }
-
+  
 export async function getUserById(id) {
     return await axios.get(`${apiurl}/getUserById/${id}`)
 }
@@ -20,19 +20,6 @@ export async function searchUserByUsername(username) {
     })
 }
 
-export async function getAllUsersSortByAge() {
-    return await axios.get(`${apiurl}/getAllUsersSortByAge`)
-}
-
-export async function getAllUsersAge(age) {
-    return await axios.get(`${apiurl}/getAllUsersAge/${age}`)
-}
-
-export async function getAllUsersAgeBetMaxAgeMinAge(minAge, maxAge) {
-    return await axios.get(`${apiurl}/getAllUsersAgeBetMaxAgeMinAge`, {
-        params: { minAge, maxAge }
-    })
-}
 
 export async function getAllClient() {
     return await axios.get(`${apiurl}/getAllClient`)

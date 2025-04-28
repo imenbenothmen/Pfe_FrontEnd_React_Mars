@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { getAllUsers, deleteUserById, addUserClient, addUserLivreur,addUserAdmin, updateUserById } from "../../services/ApiUser"; //1 importation
 
+
 // components
 
 // import TableDropdown from "components/Dropdowns/TableDropdown.js";
@@ -10,18 +11,20 @@ export default function CardTable({ color }) {
 
   const [users, setUsers] = useState([""]) //2 const (get)
 
+
   const getUsers = async () => {
-    //3 fct getUsers
     try {
-      console.log("data :")
-      await getAllUsers().then((res) => {        
-        setUsers(res.data.userListe);
-        
-      });
+      console.log("Fetching users...");
+      const response = await getAllUsers();  // Utilisation de la fonction getAllUsers ici
+      console.log("Users fetched:", response);
+      setUsers(response.data.userListe);  // Mise à jour de l'état des utilisateurs
     } catch (error) {
-      console.log(error);
+      console.log("Error fetching users:", error);  // Affichage de l'erreur en cas d'échec
     }
   };
+  
+  
+
 
   const deleteUser = async (id) => {
     try {
