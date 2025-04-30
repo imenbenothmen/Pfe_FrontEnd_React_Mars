@@ -1,10 +1,7 @@
-import React, { useState, useEffect } from "react"; //*
+import React, { useState, useEffect } from "react"; 
 import { Link } from "react-router-dom";
+import { getAllProducts } from "../services/Apiproduit";
 
-import { getAllProducts } from "../services/Apiproduit"; //* importation
-
-
-// components
 
 import Navbar from "components/Navbars/AuthNavbar.js";
 import Footer from "components/Footers/Footer.js";
@@ -12,19 +9,41 @@ import Footer from "components/Footers/Footer.js";
 export default function Landing() {
 
   const [products, setProducts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
+  
 
-  const getProduits = async () => {
+ 
+
+  const getProducts = async () => {
     try {
-      const res = await getAllProducts();
-      setProducts(res.data.produits);
+      await getAllProducts().then((res) => {
+        setProducts(res.data.productlist);
+      });
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   };
 
   useEffect(() => {
-    getProduits();
+    getProducts();
   }, []);
+
+ // Calculer les utilisateurs affichés pour la page actuelle
+ const indexOfLastProduct = currentPage * itemsPerPage;
+ const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
+ const paginatedProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
+  // Changer de page
+  const nextPage = () => {
+    if (currentPage < Math.ceil(products.length / itemsPerPage)) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+    const prevPage = () => {
+      if (currentPage > 1) {
+        setCurrentPage(currentPage - 1);
+      }
+  };
 
   return (
     <>
@@ -84,7 +103,7 @@ export default function Landing() {
           <div className="container mx-auto px-4">
             <div className="flex flex-wrap">
 
-            {products.map((product, index) => ( //*map 
+            {paginatedProducts.map((product,index)=>( //*map 
 
               <div className="lg:pt-12 pt-6 w-full md:w-4/12 px-4 text-center">
                 <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg">
@@ -106,7 +125,32 @@ export default function Landing() {
  ))}
 </div>
 
-
+{/* Pagination */}
+<div className="flex justify-center mt-6">
+              <button
+                onClick={prevPage}
+                disabled={currentPage === 1}
+                className={`px-4 py-2 mx-2 text-white bg-blue-500 rounded ${
+                  currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+              >
+                Previous
+              </button>
+              <span className="px-4 py-2 text-lg">
+                Page {currentPage} / {Math.ceil(products.length / itemsPerPage)}
+              </span>
+              <button
+                onClick={nextPage}
+                disabled={currentPage >= Math.ceil(products.length / itemsPerPage)}
+                className={`px-4 py-2 mx-2 text-white bg-blue-500 rounded ${
+                  currentPage >= Math.ceil(products.length / itemsPerPage)
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                }`}
+              >
+                Next
+              </button>
+            </div>
 
             <div className="flex flex-wrap items-center mt-32">
               <div className="w-full md:w-5/12 px-4 mr-auto ml-auto">
