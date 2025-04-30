@@ -2,27 +2,27 @@ import axios from 'axios'
 
 const apiurl = 'http://localhost:5000/categories'
 
-// POST – Ajouter une catégorie
-export async function ajouterCategorie(data) {
-    return await axios.post(`${apiurl}/ajouter`, data)
+// POST – Add a category
+export async function addCategory(data) {
+    return await axios.post(`${apiurl}/addCategory`, data)
 }
 
-// DELETE – Supprimer une catégorie par ID
-export async function supprimerCategorie(id) {
-    return await axios.delete(`${apiurl}/supprimer/${id}`)
+// DELETE – Delete a category by ID
+export async function deleteCategory(id) {
+    return await axios.delete(`${apiurl}/deleteCategory/${id}`)
 }
 
-// GET – Lister toutes les catégories
+// GET – List all categories
 export async function getCategories() {
-    return await axios.get(`${apiurl}/liste`)
+    return await axios.get(`${apiurl}/getCategories`)
 }
 
-// GET – Détails d’une catégorie par ID
-export async function getCategorieDetails(id) {
-    return await axios.get(`${apiurl}/details/${id}`)
+// GET – Get category details by ID
+export async function getCategoryDetails(id) {
+    return await axios.get(`${apiurl}/getCategoryDetails/${id}`)
 }
 
-// PUT – Renommer une catégorie
-export async function renommerCategorie(id, data) {
-    return await axios.put(`${apiurl}/renommer/${id}`, data)
+// PUT – Rename a category
+export async function renameCategory(id, data) {
+    return await axios.put(`${apiurl}/renameCategory/${id}`, data)
 }

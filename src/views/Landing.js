@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"; //*
 import { Link } from "react-router-dom";
 
-import { afficherProduits } from "../services/Apiproduit"; //* importation
+import { getAllProducts } from "../services/Apiproduit"; //* importation
 
 
 // components
@@ -11,12 +11,12 @@ import Footer from "components/Footers/Footer.js";
 
 export default function Landing() {
 
-  const [produits, setProduits] = useState([]);
+  const [products, setProducts] = useState([]);
 
   const getProduits = async () => {
     try {
-      const res = await afficherProduits();
-      setProduits(res.data.produits);
+      const res = await getAllProducts();
+      setProducts(res.data.produits);
     } catch (error) {
       console.error(error);
     }
@@ -84,7 +84,7 @@ export default function Landing() {
           <div className="container mx-auto px-4">
             <div className="flex flex-wrap">
 
-            {produits.map((produit, index) => ( //*map 
+            {products.map((product, index) => ( //*map 
 
               <div className="lg:pt-12 pt-6 w-full md:w-4/12 px-4 text-center">
                 <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg">
