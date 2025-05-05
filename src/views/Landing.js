@@ -12,14 +12,13 @@ export default function Landing() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
   
-
- 
-
   const getProducts = async () => {
     try {
-      await getAllProducts().then((res) => {
-        setProducts(res.data.productlist);
-      });
+     //  Avant tu faisais: res.data.productlist
+      // Je change ici car apparemment res.data EST déjà un tableau
+      const res = await getAllProducts();
+      console.log("API response:", res.data); // 🔍 debug: voir la réponse de l'API
+      setProducts(res.data); // ✅ on met directement le tableau ici
     } catch (error) {
       console.log(error);
     }
@@ -102,29 +101,36 @@ export default function Landing() {
         <section className="pb-20 bg-blueGray-200 -mt-24">
           <div className="container mx-auto px-4">
             <div className="flex flex-wrap">
-
-            {paginatedProducts.map((product,index)=>( //*map 
-
-              <div className="lg:pt-12 pt-6 w-full md:w-4/12 px-4 text-center">
-                <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg">
-                  <div className="px-4 py-5 flex-auto">
-                    <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-red-400">
-                      <i className="fas fa-award"></i>
+              {paginatedProducts.map((product, index) => (
+                <div
+                  key={index}
+                  className="lg:pt-12 pt-6 w-full md:w-4/12 px-4 text-center"
+                >
+                  <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg">
+                    <img
+                      src={`http://localhost:5000/files/${product.image}`}
+                      alt={product.name}
+                      className="w-full h-48 object-cover rounded-t-lg"
+                    />
+                    <div className="px-4 py-5 flex-auto">
+                      <h6 className="text-xl font-semibold">{product.name}</h6>
+                      <p className="mt-2 mb-2 text-blueGray-500">
+                        {product.description}
+                      </p>
+                      <p className="text-lg font-bold text-blueGray-700">
+                        {product.price} TND
+                      </p>
+                      <Link
+                        to={`/product/${product._id}`}
+                        className="mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+                      >
+                        See details
+                      </Link>
                     </div>
-                    <h6 className="text-xl font-semibold">Awarded Agency</h6>
-                    <p className="mt-2 mb-4 text-blueGray-500">
-                      Divide details about your product or agency work into
-                      parts. A paragraph describing a feature will be enough.
-                    </p>
                   </div>
                 </div>
-              </div>
-              
-
-              
- ))}
-</div>
-
+              ))}
+            </div>
 {/* Pagination */}
 <div className="flex justify-center mt-6">
               <button
