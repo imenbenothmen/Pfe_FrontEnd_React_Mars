@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
-//  Réutilise la même navbar/footer que Landing
+// 🔥 Réutilise la même navbar/footer que Landing
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
 
@@ -11,7 +11,7 @@ export default function ProductDetails() {
   const [product, setProduct] = useState(null);
 
   useEffect(() => {
-    //  Appel API pour récupérer les détails du produit par ID
+    // 🔎 Appel API pour récupérer les détails du produit par ID
     const fetchProduct = async () => {
       try {
         const res = await axios.get(`http://localhost:5000/products/getProductDetails/${id}`);
@@ -47,14 +47,14 @@ export default function ProductDetails() {
                   {product.description}
                 </p>
                 <p className="mt-4 text-xl font-bold text-blueGray-700">
-                  Prix: {product.price} TND
+                  Price: {product.price} TND
                 </p>
                 <p className="mt-2 text-md text-blueGray-600">
                   Stock: {product.stock}
                 </p>
                 {product.material && (
                   <p className="mt-2 text-md text-blueGray-600">
-                    Matériau: {product.material}
+                    material: {product.material}
                   </p>
                 )}
                 {product.type && (
@@ -62,6 +62,25 @@ export default function ProductDetails() {
                     Type: {product.type}
                   </p>
                 )}
+
+                {/* Affichage des avis */}
+                <div className="mt-8 text-left">
+                  <h4 className="text-xl font-semibold mb-4">review :</h4>
+                  {product.reviews && product.reviews.length > 0 ? (
+                    <ul>
+                      {product.reviews.map((review, index) => (
+                        <li key={index} className="mt-2 border-b pb-2">
+                          <p>
+                            <strong>{review.user?.name || "Utilisateur"}</strong> : {review.comment}
+                          </p>
+                          <p>Rating: {review.rating}</p>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>No reviews for this product.</p>
+                  )}
+                </div>
               </div>
             </div>
           </div>
