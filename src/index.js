@@ -15,6 +15,7 @@ import Auth from "layouts/Auth.js";
 import Landing from "views/Landing.js";
 import Profile from "views/Profile.js";
 import Welcome from "views/Welcome.js";
+import ProductDetails from "views/ProductDetails.js"; //  importe ta page
 
 ReactDOM.render(
   <BrowserRouter>
@@ -24,6 +25,7 @@ ReactDOM.render(
       <Route path="/auth" component={Auth} />
       {/* add routes without layouts */}
       <Route path="/landing" exact component={Landing} />
+      <Route path="/product/:id" exact component={ProductDetails} />
       <Route path="/profile" exact component={Profile} />
       <Route path="/" exact component={Welcome} />
       {/* add redirect for first page */}
