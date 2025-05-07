@@ -93,7 +93,7 @@ export default function Navbar(props) {
               {/* Connexion */}
               <li className="flex items-center">
                 <Link
-                  to="/auth/register" // Lien vers la page de connexion
+                  to="/auth" // Lien vers la page de connexion
                   className="hover:text-blueGray-500 text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold"
                 >
                   {/* Icône cercle avec icône utilisateur */}
@@ -156,7 +156,7 @@ export default function Navbar(props) {
               {/* Icône du panier */}
               <li className="flex items-center">
                 <Link
-                  to="/cart"
+                  to="/carts"
                   className="hover:text-blueGray-500 text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold"
                 >
                   <i className="fas fa-shopping-cart text-lg leading-lg" />

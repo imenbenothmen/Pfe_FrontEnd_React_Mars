@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import axios from "axios";
 
 // 🔥 Réutilise la même navbar/footer que Landing
@@ -9,6 +9,9 @@ import Footer from "components/Footers/Footer.js";
 export default function ProductDetails() {
   const { id } = useParams(); // 👈 récupérer l'ID du produit à partir de l'URL
   const [product, setProduct] = useState(null);
+  const [cart, setCart] = useState([]); // 🚀 gérer le panier dans ce composant
+  const [isFavorite, setIsFavorite] = useState(false); // 🚀 État pour savoir si le produit est favori
+  const history = useHistory();
 
   useEffect(() => {
     // 🔎 Appel API pour récupérer les détails du produit par ID
@@ -24,6 +27,33 @@ export default function ProductDetails() {
 
     fetchProduct();
   }, [id]);
+
+  const addToCart = () => {
+    // Ajouter le produit au panier
+    setCart([...cart, product]);
+    alert("Produit ajouté au panier !");
+    history.push('/panier'); // Rediriger vers la page du panier
+  };
+
+  const toggleFavorite = async () => {
+    try {
+      // Appel à l'API pour ajouter ou retirer du favoris
+      const method = isFavorite ? "delete" : "post";
+      const res = await axios({
+        method,
+        url: `http://localhost:5000/favorites/${isFavorite ? 'remove' : 'add'}`, // Assure-toi que l'URL de l'API correspond
+        data: {
+          productId: product._id, // Envoyer l'ID du produit
+        },
+      });
+      console.log(res.data);
+      setIsFavorite(!isFavorite); // Toggle favori
+      alert(isFavorite ? "Produit retiré des favoris." : "Produit ajouté aux favoris.");
+    } catch (error) {
+      console.log(error);
+      alert("Erreur lors de l'ajout au favoris.");
+    }
+  };
 
   if (!product) {
     return <div>Chargement...</div>;
@@ -71,7 +101,7 @@ export default function ProductDetails() {
                       {product.reviews.map((review, index) => (
                         <li key={index} className="mt-2 border-b pb-2">
                           <p>
-                            <strong>{review.user?.name || "Utilisateur"}</strong> : {review.comment}
+                            <strong>{review.user?.name || "User"}</strong> : {review.comment}
                           </p>
                           <p>Rating: {review.rating}</p>
                         </li>
@@ -81,6 +111,19 @@ export default function ProductDetails() {
                     <p>No reviews for this product.</p>
                   )}
                 </div>
+
+                {/* Boutons Ajouter au panier et Ajouter aux favoris */}
+                <button 
+                  onClick={addToCart} 
+                  className="mt-4 bg-blue-500 text-white px-6 py-3 rounded-full shadow-md hover:bg-blue-600">
+                  Ajouter au panier
+                </button>
+                
+                <button 
+                  onClick={toggleFavorite} 
+                  className={`mt-4 ml-4 ${isFavorite ? 'bg-red-500' : 'bg-gray-500'} text-white px-6 py-3 rounded-full shadow-md hover:bg-${isFavorite ? 'red' : 'gray'}-600`}>
+                  {isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}
+                </button>
               </div>
             </div>
           </div>
