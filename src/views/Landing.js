@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"; 
 import { Link } from "react-router-dom";
-import { getAllProducts } from "../services/Apiproduit";
+import { getAllProducts } from "../services/Apiproduct";
 
 
 import Navbar from "components/Navbars/AuthNavbar.js";

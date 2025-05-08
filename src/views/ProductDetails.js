@@ -1,25 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import axios from "axios";
-
-// 🔥 Réutilise la même navbar/footer que Landing
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
 
+// 💡 Appels favoris séparés
+import { add_to_favorites, remove_from_favorites } from "services/Apifavorites";
+
 export default function ProductDetails() {
-  const { id } = useParams(); // 👈 récupérer l'ID du produit à partir de l'URL
+  const { id } = useParams();
   const [product, setProduct] = useState(null);
-  const [cart, setCart] = useState([]); // 🚀 gérer le panier dans ce composant
-  const [isFavorite, setIsFavorite] = useState(false); // 🚀 État pour savoir si le produit est favori
+  const [cart, setCart] = useState([]);
+  const [isFavorite, setIsFavorite] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
-    // 🔎 Appel API pour récupérer les détails du produit par ID
     const fetchProduct = async () => {
       try {
         const res = await axios.get(`http://localhost:5000/products/getProductDetails/${id}`);
-        console.log("Détails du produit:", res.data);
         setProduct(res.data);
+        console.log("Détails du produit:", res.data);
       } catch (error) {
         console.log(error);
       }
@@ -29,29 +29,33 @@ export default function ProductDetails() {
   }, [id]);
 
   const addToCart = () => {
-    // Ajouter le produit au panier
     setCart([...cart, product]);
     alert("Produit ajouté au panier !");
-    history.push('/panier'); // Rediriger vers la page du panier
+    history.push('/carts');
   };
 
   const toggleFavorite = async () => {
     try {
-      // Appel à l'API pour ajouter ou retirer du favoris
-      const method = isFavorite ? "delete" : "post";
-      const res = await axios({
-        method,
-        url: `http://localhost:5000/favorites/${isFavorite ? 'remove' : 'add'}`, // Assure-toi que l'URL de l'API correspond
-        data: {
-          productId: product._id, // Envoyer l'ID du produit
-        },
-      });
-      console.log(res.data);
-      setIsFavorite(!isFavorite); // Toggle favori
-      alert(isFavorite ? "Produit retiré des favoris." : "Produit ajouté aux favoris.");
+      const clientId = "680b67d60628614ec6ad91a8"; // 🔁 Remplace ça par un ID dynamique si besoin
+      //const clientId = JSON.parse(localStorage.getItem("user"))?._id;
+
+      const data = {
+        clientId,
+        productId: product._id,
+      };
+
+      if (isFavorite) {
+        await remove_from_favorites(data);
+        setIsFavorite(false);
+        alert("Produit retiré des favoris.");
+      } else {
+        await add_to_favorites(data);
+        setIsFavorite(true);
+        alert("Produit ajouté aux favoris.");
+      }
     } catch (error) {
       console.log(error);
-      alert("Erreur lors de l'ajout au favoris.");
+      alert("Erreur lors de la gestion des favoris.");
     }
   };
 
@@ -84,7 +88,7 @@ export default function ProductDetails() {
                 </p>
                 {product.material && (
                   <p className="mt-2 text-md text-blueGray-600">
-                    material: {product.material}
+                    Material: {product.material}
                   </p>
                 )}
                 {product.type && (
@@ -93,9 +97,9 @@ export default function ProductDetails() {
                   </p>
                 )}
 
-                {/* Affichage des avis */}
+                {/* Avis */}
                 <div className="mt-8 text-left">
-                  <h4 className="text-xl font-semibold mb-4">review :</h4>
+                  <h4 className="text-xl font-semibold mb-4">Review :</h4>
                   {product.reviews && product.reviews.length > 0 ? (
                     <ul>
                       {product.reviews.map((review, index) => (
@@ -112,7 +116,7 @@ export default function ProductDetails() {
                   )}
                 </div>
 
-                {/* Boutons Ajouter au panier et Ajouter aux favoris */}
+                {/* Boutons */}
                 <button 
                   onClick={addToCart} 
                   className="mt-4 bg-blue-500 text-white px-6 py-3 rounded-full shadow-md hover:bg-blue-600">
