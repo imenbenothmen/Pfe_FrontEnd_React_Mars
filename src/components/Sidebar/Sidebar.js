@@ -115,128 +115,9 @@ export default function Sidebar() {
               </li>
 )}
 
-{user.role === "Admin" && (
-/* Gestion des Produits */
-<li className="items-center">
-      <Link
-        className={
-          "text-xs uppercase py-3 font-bold block " +
-          (window.location.href.indexOf("/admin/products") !== -1
-            ? "text-lightBlue-500 hover:text-lightBlue-600"
-            : "text-blueGray-700 hover:text-blueGray-500")
-        }
-        to="/admin/products"
-      >
-        <i
-          className={
-            "fas fa-cogs mr-2 text-sm " +
-            (window.location.href.indexOf("/admin/products") !== -1
-              ? "opacity-75"
-              : "text-blueGray-300")
-          }
-        ></i>{" "}
-        Product Management
-      </Link>
-    </li>
-)}
-{user.role === "Admin" && (
-    /* Gestion des Commandes */
-    <li className="items-center">
-      <Link
-        className={
-          "text-xs uppercase py-3 font-bold block " +
-          (window.location.href.indexOf("/admin/orders") !== -1
-            ? "text-lightBlue-500 hover:text-lightBlue-600"
-            : "text-blueGray-700 hover:text-blueGray-500")
-        }
-        to="/admin/orders"
-      >
-        <i
-          className={
-            "fas fa-box-open mr-2 text-sm " +
-            (window.location.href.indexOf("/admin/orders") !== -1
-              ? "opacity-75"
-              : "text-blueGray-300")
-          }
-        ></i>{" "}
-        Orders Management
-      </Link>
-    </li>
 
-        )}
-        {user.role === "Admin" && (
-    /* Gestion des Réclamations */
-    <li className="items-center">
-      <Link
-        className={
-          "text-xs uppercase py-3 font-bold block " +
-          (window.location.href.indexOf("/admin/complaints") !== -1
-            ? "text-lightBlue-500 hover:text-lightBlue-600"
-            : "text-blueGray-700 hover:text-blueGray-500")
-        }
-        to="/admin/complaints"
-      >
-        <i
-          className={
-            "fas fa-exclamation-circle mr-2 text-sm " +
-            (window.location.href.indexOf("/admin/complaints") !== -1
-              ? "opacity-75"
-              : "text-blueGray-300")
-          }
-        ></i>{" "}
-        Complaints Management
-      </Link>
-    </li>
-        )}
-        {user.role === "Admin" && (
 
-    /* Gestion des Rapports de Ventes */
-    <li className="items-center">
-      <Link
-        className={
-          "text-xs uppercase py-3 font-bold block " +
-          (window.location.href.indexOf("/admin/reports") !== -1
-            ? "text-lightBlue-500 hover:text-lightBlue-600"
-            : "text-blueGray-700 hover:text-blueGray-500")
-        }
-        to="/admin/reports"
-      >
-        <i
-          className={
-            "fas fa-chart-line mr-2 text-sm " +
-            (window.location.href.indexOf("/admin/reports") !== -1
-              ? "opacity-75"
-              : "text-blueGray-300")
-          }
-        ></i>{" "}
-        Sales Reports
-      </Link>
-    </li>
-        )}
-        {user.role === "Admin" && (
- /* Gestion des Coupons */
-    <li className="items-center">
-      <Link
-        className={
-          "text-xs uppercase py-3 font-bold block " +
-          (window.location.href.indexOf("/admin/coupons") !== -1
-            ? "text-lightBlue-500 hover:text-lightBlue-600"
-            : "text-blueGray-700 hover:text-blueGray-500")
-        }
-        to="/admin/coupons"
-      >
-        <i
-          className={
-            "fas fa-gift mr-2 text-sm " +
-            (window.location.href.indexOf("/admin/coupons") !== -1
-              ? "opacity-75"
-              : "text-blueGray-300")
-          }
-        ></i>{" "}
-        Coupons Management
-      </Link>
-    </li>
-        )}
+ 
 {user.role === "Admin" && (
 
               <li className="items-center">
@@ -283,6 +164,31 @@ export default function Sidebar() {
                     }
                   ></i>{" "}
                   Tables
+                </Link>
+              </li>
+)}
+
+{user.role === "Admin" && (
+
+              <li className="items-center">
+                <Link
+                  className={
+                    "text-xs uppercase py-3 font-bold block " +
+                    (window.location.href.indexOf("/admin/tables") !== -1
+                      ? "text-lightBlue-500 hover:text-lightBlue-600"
+                      : "text-blueGray-700 hover:text-blueGray-500")
+                  }
+                  to="/admin/produits-categories"
+                >
+                  <i
+                    className={
+                      "fas fa-table mr-2 text-sm " +
+                      (window.location.href.indexOf("/admin/produits-categories") !== -1
+                        ? "opacity-75"
+                        : "text-blueGray-300")
+                    }
+                  ></i>{" "}
+                  ProductCategoryManager
                 </Link>
               </li>
 )}
