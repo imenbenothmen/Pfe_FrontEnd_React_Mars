@@ -2,6 +2,10 @@ import axios from 'axios';
 
 const apiUrl = 'http://localhost:5000/complaints';
 
+
+export async function getAllComplaints() {
+  return await axios.get(`${apiUrl}`);
+}
 // POST – Submit a complaint
 export async function submitComplaint(complaintData) {
     return await axios.post(`${apiUrl}`, complaintData);

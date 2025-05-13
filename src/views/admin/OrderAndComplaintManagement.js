@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { getAllOrders } from "../../services/Apiorder"; // Chemin selon ton projet
-import { getAllComplaints } from "../../Apicomplaint"; // Chemin selon ton projet
+import { getAllComplaints } from '../../services/Apicomplaint';
+
 
 export default function OrderAndComplaintManagement() {
   const [activeTab, setActiveTab] = useState("orders");
