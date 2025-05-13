@@ -193,7 +193,33 @@ export default function Sidebar() {
               </li>
 )}
 
+
 {user.role === "Admin" && (
+
+              <li className="items-center">
+                <Link
+                  className={
+                    "text-xs uppercase py-3 font-bold block " +
+                    (window.location.href.indexOf("/admin/tables") !== -1
+                      ? "text-lightBlue-500 hover:text-lightBlue-600"
+                      : "text-blueGray-700 hover:text-blueGray-500")
+                  }
+                  to="/admin/commandes-reclamations"
+                >
+                  <i
+                    className={
+                      "fas fa-table mr-2 text-sm " +
+                      (window.location.href.indexOf("/admin/produits-categories") !== -1
+                        ? "opacity-75"
+                        : "text-blueGray-300")
+                    }
+                  ></i>{" "}
+                  OrderAndComplaintManagement
+                </Link>
+              </li>
+)}
+
+{/*user.role === "Admin" && (
 
               <li className="items-center">
                 <Link
@@ -216,7 +242,7 @@ export default function Sidebar() {
                   Maps
                 </Link>
               </li>
-)}
+)*/}
             </ul>
 
             {/* Divider */}
