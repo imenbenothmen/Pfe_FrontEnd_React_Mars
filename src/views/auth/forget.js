@@ -26,14 +26,12 @@ export default function Login() {
                     />
                   </div>
 
-                  
-
                   <div className="text-center mt-6">
                     <button
                       className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
                       type="button"
                     >
-                      Submit
+                      Envoyer
                     </button>
                   </div>
                 </form>
@@ -45,12 +43,12 @@ export default function Login() {
                   to="auth/login"
                   className="text-blueGray-200"
                 >
-                  <small>Login</small>
+                  <small>Connexion</small>
                 </Link>
               </div>
               <div className="w-1/2 text-right">
                 <Link to="/auth/register" className="text-blueGray-200">
-                  <small>Create new account</small>
+                  <small>Créer un nouveau compte</small>
                 </Link>
               </div>
             </div>

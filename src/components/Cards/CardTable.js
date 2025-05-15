@@ -1,240 +1,389 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { getAllUsers, deleteUserById, addUserClient, addUserLivreur,addUserAdmin, updateUserById } from "../../services/ApiUser"; //1 importation
-
-
-// components
-
-// import TableDropdown from "components/Dropdowns/TableDropdown.js";
+import {
+  getAllUsers,
+  deleteUserById,
+  addUserClient,
+  addUserAdmin,
+  updateUserById,
+} from "../../services/ApiUser";
 
 export default function CardTable({ color }) {
+  const [users, setUsers] = useState([]);
+  const [filterRole, setFilterRole] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
-  const [users, setUsers] = useState([""]) //2 const (get)
-
+  const [editingUserId, setEditingUserId] = useState(null);
+  const [editingUserData, setEditingUserData] = useState({});
 
   const getUsers = async () => {
+    setLoading(true);
+    setErrorMsg("");
     try {
-      console.log("Fetching users...");
-      const response = await getAllUsers();  // Utilisation de la fonction getAllUsers ici
-      console.log("Users fetched:", response);
-      setUsers(response.data.userListe);  // Mise à jour de l'état des utilisateurs
+      const response = await getAllUsers();
+      setUsers(response.data.userListe);
     } catch (error) {
-      console.log("Error fetching users:", error);  // Affichage de l'erreur en cas d'échec
+      setErrorMsg("Erreur lors de la récupération des utilisateurs.");
+    } finally {
+      setLoading(false);
     }
   };
-  
-  
-
 
   const deleteUser = async (id) => {
+    if (!window.confirm("Confirmez-vous la suppression de cet utilisateur ?")) return;
     try {
       await deleteUserById(id);
       getUsers();
     } catch (error) {
-      console.log(error);
+      setErrorMsg("Erreur lors de la suppression.");
     }
   };
 
-  useEffect(() => { getUsers(); }, []);
+  useEffect(() => {
+    getUsers();
+  }, []);
 
-  //--------------add-----------------
   const [newUser, setNewUser] = useState({
     username: "",
     email: "",
     password: "",
-    role: "client", // valeur par défaut pour le rôle
+    role: "client",
     delivery_address: "",
-    numeroCarteFidelite: "",
-    createdAt: "",
     phone: "",
     user_image: "client.png",
   });
-  
-  // Met à jour dynamiquement l'objet newUser quand l'utilisateur modifie un champ du formulaire
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setNewUser({ ...newUser, [name]: value });
+
+    if (name === "role" && value === "admin") {
+      setNewUser({ ...newUser, role: value, delivery_address: "" });
+    } else {
+      setNewUser({ ...newUser, [name]: value });
+    }
   };
 
- // const AddNewUser = async () => {
-   // try {
-     // await addUserClient(newUser);
-      //getUsers();
-    //} catch (error) {
-     // console.log(error);
-   // }
-  //};
+  const validateNewUser = () => {
+    if (!newUser.username.trim()) return false;
+    if (!newUser.email.trim()) return false;
+    if (!newUser.password.trim()) return false;
+    if (newUser.role === "client" && !newUser.delivery_address.trim()) return false;
+    return true;
+  };
 
-  const AddNewUser = async () => {
+  const addNewUser = async () => {
+    if (!validateNewUser()) {
+      alert("Veuillez remplir tous les champs obligatoires.");
+      return;
+    }
     try {
       if (newUser.role === "client") {
-        await addUserClient(newUser);  // Ajouter un client
-      } else if (newUser.role === "admin") {
-        await addUserAdmin(newUser);   // Ajouter un admin
-      } else if (newUser.role === "livreur") {
-        await addUserLivreur(newUser); // Ajouter un livreur
+        await addUserClient(newUser);
+      } else {
+        await addUserAdmin(newUser);
       }
-  
-      getUsers();  // Rafraîchir la liste des utilisateurs
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  
-
-  const updateNewUser = async (newUser, id) => {
-    try {
-      await updateUserById(id, newUser);
+      setNewUser({
+        username: "",
+        email: "",
+        password: "",
+        role: "client",
+        delivery_address: "",
+        phone: "",
+        user_image: "client.png",
+      });
       getUsers();
     } catch (error) {
-      console.log(error);
+      setErrorMsg("Erreur lors de l'ajout de l'utilisateur.");
     }
   };
 
+  // Gérer l'édition inline
+  const startEditing = (user) => {
+    setEditingUserId(user._id);
+    setEditingUserData({ ...user });
+  };
+
+  const cancelEditing = () => {
+    setEditingUserId(null);
+    setEditingUserData({});
+  };
+
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    setEditingUserData((prev) => ({
+      ...prev,
+      [name]: value,
+      ...(name === "role" && value === "admin" ? { delivery_address: "" } : {}),
+    }));
+  };
+
+  const saveEdit = async () => {
+    try {
+      await updateUserById(editingUserId, editingUserData);
+      setEditingUserId(null);
+      setEditingUserData({});
+      getUsers();
+    } catch (error) {
+      setErrorMsg("Erreur lors de la mise à jour.");
+    }
+  };
+
+  const filteredUsers = users.filter((user) => {
+    const roleMatch = filterRole === "all" || user.role === filterRole;
+    const searchMatch =
+      user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase());
+    return roleMatch && searchMatch;
+  });
+
   return (
-    <>
-      <div
-        className={
-          "relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded " +
-          (color === "light" ? "bg-white" : "bg-lightBlue-900 text-white")
-        }
-      >
-        <div className="rounded-t mb-0 px-4 py-3 border-0">
-          <div className="flex flex-wrap items-center">
-            <div className="relative w-full px-4 max-w-full flex-grow flex-1">
-              <h3
-                className={
-                  "font-semibold text-lg " +
-                  (color === "light" ? "text-blueGray-700" : "text-white")
-                }
-              >
-                List Users
-              </h3>
-              <div>
-                <input
-                  type="text"
-                  placeholder="username"
-                  className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring mr-2 ease-linear transition-all duration-150"
-                  name="username"
-                  value={newUser.username}
-                  onChange={handleChange}
-                />
-                <input
-                  type="email"
-                  placeholder="email"
-                  className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring mr-2 ease-linear transition-all duration-150"
-                  name="email"
-                  value={newUser.email}
-                  onChange={handleChange}
-                />
-                <input
-                  type="password"
-                  placeholder="password"
-                  name="password"
-                  className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring ease-linear transition-all duration-150"
-                  onChange={handleChange}
-                />
+    <div
+      className={
+        "relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded " +
+        (color === "light" ? "bg-white" : "bg-lightBlue-900 text-white")
+      }
+    >
+      <div className="rounded-t mb-0 px-4 py-3 border-0">
+        <h3
+          className={
+            "font-semibold text-lg " +
+            (color === "light" ? "text-blueGray-700" : "text-white")
+          }
+        >
+          Gestion des utilisateurs
+        </h3>
 
-                {/* Sélection du rôle */}
-                <select
-                  name="role"
-                  value={newUser.role}
-                  onChange={handleChange}
-                  className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring mr-2 ease-linear transition-all duration-150"
-                >
-                  <option value="client">Client</option>
-                  <option value="admin">Admin</option>
-                  <option value="livreur">Livreur</option>
-                </select>
+        {errorMsg && (
+          <div className="text-red-600 mb-2 font-semibold">{errorMsg}</div>
+        )}
 
-                <br></br>
-                <button
-                  onClick={() => {
-                    AddNewUser(newUser);
-                  }}
-                  className="bg-lightBlue-500 mt-2 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                >
-                  AddUser
-                </button>
-                
-                <button
-                  onClick={() => {
-                    updateNewUser(newUser, newUser._id);
-                  }}
-                  className="bg-lightBlue-500 mt-2 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                >
-                  Update User
-                </button>
-              </div>
-            </div>
-          </div>
+        <div className="my-3 flex flex-wrap items-center gap-2">
+          <input
+            type="text"
+            placeholder="Nom d'utilisateur"
+            name="username"
+            value={newUser.username}
+            onChange={handleChange}
+            className="border px-3 py-2 rounded text-black placeholder-gray-500 bg-white"
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            name="email"
+            value={newUser.email}
+            onChange={handleChange}
+            className="border px-3 py-2 rounded text-black placeholder-gray-500 bg-white"
+          />
+          <input
+            type="password"
+            placeholder="Mot de passe"
+            name="password"
+            value={newUser.password}
+            onChange={handleChange}
+            className="border px-3 py-2 rounded text-black placeholder-gray-500 bg-white"
+          />
+          <input
+            type="text"
+            placeholder="Téléphone"
+            name="phone"
+            value={newUser.phone}
+            onChange={handleChange}
+            className="border px-3 py-2 rounded text-black placeholder-gray-500 bg-white"
+          />
+          {newUser.role === "client" && (
+            <input
+              type="text"
+              placeholder="Adresse de livraison"
+              name="delivery_address"
+              value={newUser.delivery_address}
+              onChange={handleChange}
+              className="border px-3 py-2 rounded text-black placeholder-gray-500 bg-white"
+            />
+          )}
+          <select
+            name="role"
+            value={newUser.role}
+            onChange={handleChange}
+            className="border px-3 py-2 rounded text-black bg-white"
+          >
+            <option value="client">Client</option>
+            <option value="admin">Administrateur</option>
+          </select>
+          <button
+            onClick={addNewUser}
+            disabled={!validateNewUser()}
+            className={`px-4 py-2 rounded ml-3 text-white ${
+              validateNewUser() ? "bg-blue-500 hover:bg-blue-700" : "bg-gray-400 cursor-not-allowed"
+            }`}
+          >
+            Ajouter utilisateur
+          </button>
         </div>
 
-        <div className="block w-full overflow-x-auto">
-          {/* Projects table */}
-          {/* Table */}
-          <table className="items-center w-full bg-transparent border-collapse">
-            <thead>
-              <tr>
-                {["Username", "Email", "Phone", "Delivery Address", "Role", "Date d'inscription", "Actions"].map((header) => (
-                  <th
-                    key={header}
-                    className={
-                      "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left " +
-                      (color === "light"
-                        ? "bg-blueGray-50 text-blueGray-500 border-blueGray-100"
-                        : "bg-lightBlue-800 text-lightBlue-300 border-lightBlue-700")
-                    }
-                  >
-                    {header}
-                  </th>
-                ))}
-              </tr>
-            </thead>
+        <div className="mt-4 flex flex-wrap items-center gap-4">
+          <select
+            value={filterRole}
+            onChange={(e) => setFilterRole(e.target.value)}
+            className="border px-3 py-2 rounded text-black bg-white"
+          >
+            <option value="all">Tous les rôles</option>
+            <option value="client">Clients</option>
+            <option value="admin">Administrateurs</option>
+          </select>
 
-            <tbody>
-              {users.map((user, index) => (
-                <tr key={index}>
-                  <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                    {user.username}
-                  </td>
-                  <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                    {user.email}
-                  </td>
-                  <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                    {user.phone}
-                  </td>
-                  <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                    {user.delivery_address}
-                  </td>
-                  <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                    {user.role}
-                  </td>
-                  <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                    {new Date(user.createdAt).toLocaleDateString()}
-                  </td>
-
-                  <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right">
-                    <button
-                      className="bg-lightBlue-500 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md mr-2 ease-linear transition-all duration-150"
-                      onClick={() => setNewUser(user)}
-                    >
-                      Update
-                    </button>
-                    <button
-                      className="bg-red-500 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md ease-linear transition-all duration-150"
-                      onClick={() => deleteUser(user._id)}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <input
+            type="text"
+            placeholder="Rechercher par nom ou email"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="border px-3 py-2 rounded text-black placeholder-gray-500 bg-white"
+          />
         </div>
       </div>
-    </>
+
+      <div className="overflow-x-auto">
+        {loading ? (
+          <div className="text-center p-4">Chargement...</div>
+        ) : (
+          <table className="w-full table-auto border-collapse border border-gray-300">
+            <thead>
+              <tr className="bg-gray-200 text-gray-700">
+                <th className="border px-4 py-2">Nom d'utilisateur</th>
+                <th className="border px-4 py-2">Email</th>
+                <th className="border px-4 py-2">Téléphone</th>
+                <th className="border px-4 py-2">Adresse de livraison</th>
+                <th className="border px-4 py-2">Rôle</th>
+                <th className="border px-4 py-2">Date d'inscription</th>
+                <th className="border px-4 py-2">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredUsers.length > 0 ? (
+                filteredUsers.map((user) => (
+                  <tr key={user._id}>
+                    <td className="border px-4 py-2">
+                      {editingUserId === user._id ? (
+                        <input
+                          type="text"
+                          name="username"
+                          value={editingUserData.username}
+                          onChange={handleEditChange}
+                          className="border rounded px-1 py-0.5 text-black"
+                        />
+                      ) : (
+                        user.username
+                      )}
+                    </td>
+                    <td className="border px-4 py-2">
+                      {editingUserId === user._id ? (
+                        <input
+                          type="email"
+                          name="email"
+                          value={editingUserData.email}
+                          onChange={handleEditChange}
+                          className="border rounded px-1 py-0.5 text-black"
+                        />
+                      ) : (
+                        user.email
+                      )}
+                    </td>
+                    <td className="border px-4 py-2">
+                      {editingUserId === user._id ? (
+                        <input
+                          type="text"
+                          name="phone"
+                          value={editingUserData.phone || ""}
+                          onChange={handleEditChange}
+                          className="border rounded px-1 py-0.5 text-black"
+                        />
+                      ) : (
+                        user.phone || "-"
+                      )}
+                    </td>
+                    <td className="border px-4 py-2">
+                      {editingUserId === user._id ? (
+                        editingUserData.role === "client" ? (
+                          <input
+                            type="text"
+                            name="delivery_address"
+                            value={editingUserData.delivery_address || ""}
+                            onChange={handleEditChange}
+                            className="border rounded px-1 py-0.5 text-black"
+                          />
+                        ) : (
+                          "-"
+                        )
+                      ) : (
+                        user.delivery_address || "-"
+                      )}
+                    </td>
+                    <td className="border px-4 py-2">
+                      {editingUserId === user._id ? (
+                        <select
+                          name="role"
+                          value={editingUserData.role}
+                          onChange={handleEditChange}
+                          className="border rounded px-1 py-0.5 text-black bg-white"
+                        >
+                          <option value="client">Client</option>
+                          <option value="admin">Administrateur</option>
+                        </select>
+                      ) : (
+                        user.role
+                      )}
+                    </td>
+                    <td className="border px-4 py-2">
+                      {new Date(user.createdAt).toLocaleDateString()}
+                    </td>
+                    <td className="border px-4 py-2 space-x-1">
+                      {editingUserId === user._id ? (
+                        <>
+                          <button
+                            onClick={saveEdit}
+                            className="bg-green-600 hover:bg-green-800 text-white font-bold py-1 px-3 rounded"
+                          >
+                            Sauvegarder
+                          </button>
+                          <button
+                            onClick={cancelEditing}
+                            className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-1 px-3 rounded"
+                          >
+                            Annuler
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            onClick={() => startEditing(user)}
+                            className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-1 px-3 rounded"
+                          >
+                            Modifier
+                          </button>
+                          <button
+                            onClick={() => deleteUser(user._id)}
+                            className="bg-red-600 hover:bg-red-800 text-white font-bold py-1 px-3 rounded"
+                          >
+                            Supprimer
+                          </button>
+                        </>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="7" className="text-center py-4">
+                    Aucun utilisateur trouvé.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </div>
   );
 }
 
