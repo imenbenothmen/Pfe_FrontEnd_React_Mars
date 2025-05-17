@@ -60,3 +60,22 @@ export async function deleteUserById(id) {
     return await axios.delete(`${apiurl}/deleteUserbyid/${id}`)
 }
 
+// Obtenir son propre profil
+export async function getMyProfile() {
+    return await axios.get(`${apiurl}/profile`, { withCredentials: true });
+}
+
+// Mettre à jour son propre profil
+export async function updateMyProfile(userData) {
+    return await axios.put(`${apiurl}/profile/update`, userData, { withCredentials: true });
+}
+
+// Option 2 
+export async function login(credentials) {
+  return await axios.post(`${apiurl}/login`, credentials, { withCredentials: true });
+}
+ 
+// POST request pour logout
+export async function logout() {
+  return await axios.post(`${apiurl}/logout`, {}, { withCredentials: true });
+}

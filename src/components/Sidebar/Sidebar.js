@@ -163,7 +163,7 @@ export default function Sidebar() {
                         : "text-blueGray-300")
                     }
                   ></i>{" "}
-                  Tables
+                  GestionUtilisateurs
                 </Link>
               </li>
 )}
@@ -188,7 +188,7 @@ export default function Sidebar() {
                         : "text-blueGray-300")
                     }
                   ></i>{" "}
-                  ProductCategoryManager
+                  GestionProduitsCategories
                 </Link>
               </li>
 )}
@@ -214,7 +214,8 @@ export default function Sidebar() {
                         : "text-blueGray-300")
                     }
                   ></i>{" "}
-                  OrderAndComplaintManagement
+                  GestionCommandesReclamations
+
                 </Link>
               </li>
 )}
