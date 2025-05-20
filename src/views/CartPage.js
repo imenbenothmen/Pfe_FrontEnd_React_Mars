@@ -1,17 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
 
 export default function CartPage() {
   const [cart, setCart] = useState([]);
 
-  const getTotalPrice = () => {
-    return cart.reduce((total, product) => total + product.price, 0);
-  };
+  useEffect(() => {
+    const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
+    setCart(savedCart);
+  }, []);
 
-  const addToCart = () => {
-    const newProduct = { name: "Bijou Example", price: 50, image: "example.jpg" };
-    setCart([...cart, newProduct]);
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
+
+  const getTotalPrice = () => {
+    return cart.reduce((total, product) => total + product.price * product.quantity, 0);
   };
 
   const removeFromCart = (index) => {
@@ -19,12 +23,24 @@ export default function CartPage() {
     setCart(newCart);
   };
 
+  const updateQuantity = (index, newQuantity) => {
+    const updatedCart = [...cart];
+    if (newQuantity <= 0) return;
+    updatedCart[index].quantity = newQuantity;
+    setCart(updatedCart);
+  };
+
+  const handleCheckout = () => {
+    console.log("Commande passée :", cart);
+    alert("Commande envoyée avec succès !");
+    setCart([]);
+    localStorage.removeItem("cart");
+  };
+
   return (
     <>
       <IndexNavbar />
-      {/* min-h-screen pour prendre toute la hauteur, flex-col pour empiler, justify-between pour pousser le footer en bas */}
       <div className="flex flex-col min-h-screen">
-        {/* Contenu principal (prend l’espace restant) */}
         <main className="flex-grow">
           <section className="py-16 bg-blueGray-50">
             <div className="container mx-auto px-4">
@@ -48,6 +64,16 @@ export default function CartPage() {
                           <div>
                             <h3 className="text-lg font-semibold text-blueGray-700">{product.name}</h3>
                             <p className="text-sm text-blueGray-500">Prix: {product.price} TND</p>
+                            <div className="flex items-center mt-2">
+                              <label className="mr-2 text-sm text-blueGray-600">Quantité:</label>
+                              <input
+                                type="number"
+                                min="1"
+                                value={product.quantity}
+                                onChange={(e) => updateQuantity(index, parseInt(e.target.value))}
+                                className="w-16 px-2 py-1 border rounded"
+                              />
+                            </div>
                           </div>
                         </div>
                         <button
@@ -59,32 +85,23 @@ export default function CartPage() {
                       </li>
                     ))}
                   </ul>
+
                   <div className="mt-8 flex justify-between items-center">
                     <h3 className="text-xl font-semibold text-blueGray-700">
                       Total: {getTotalPrice()} TND
                     </h3>
-                    <button className="bg-green-500 text-white px-6 py-3 rounded-full shadow-md hover:bg-green-600 transition-all duration-200">
-                      Passer à la caisse
+                    <button
+                      onClick={handleCheckout}
+                      className="bg-green-500 text-white px-6 py-3 rounded-full shadow-md hover:bg-green-600 transition-all duration-200"
+                    >
+                      Passer Commande
                     </button>
                   </div>
                 </div>
               )}
             </div>
           </section>
-
-          <section className="bg-blueGray-800 py-4">
-            <div className="container mx-auto text-center">
-              <button
-                onClick={addToCart}
-                className="bg-blue-500 text-white px-6 py-3 rounded-full shadow-md hover:bg-blue-600 transition-all duration-200"
-              >
-                Ajouter un produit au panier
-              </button>
-            </div>
-          </section>
         </main>
-
-        {/* Footer reste toujours en bas même si peu de contenu */}
         <Footer />
       </div>
     </>

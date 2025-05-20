@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const apiUrl = 'http://localhost:5000';
+//const apiurl = "http://localhost:5000/orders";
 
 // GET – Get all orders (for admin)
 export async function getAllOrders() {
@@ -57,3 +58,4 @@ export async function getOrderHistory(userId) {
 export async function getOrderDetailsById(orderId) {
   return await axios.get(`${apiUrl}/orders/details/${orderId}`);
 }
+

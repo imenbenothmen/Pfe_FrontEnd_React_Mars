@@ -3,14 +3,11 @@ import { useParams, useHistory } from "react-router-dom";
 import axios from "axios";
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
-
-// 💡 Appels favoris séparés
 import { add_to_favorites, remove_from_favorites } from "services/Apifavorites";
 
 export default function ProductDetails() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
-  const [cart, setCart] = useState([]);
   const [isFavorite, setIsFavorite] = useState(false);
   const history = useHistory();
 
@@ -29,16 +26,24 @@ export default function ProductDetails() {
   }, [id]);
 
   const addToCart = () => {
-    setCart([...cart, product]);
+    const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    const productIndex = existingCart.findIndex(item => item._id === product._id);
+
+    if (productIndex !== -1) {
+      existingCart[productIndex].quantity += 1;
+    } else {
+      existingCart.push({ ...product, quantity: 1 });
+    }
+
+    localStorage.setItem("cart", JSON.stringify(existingCart));
     alert("Produit ajouté au panier !");
-    history.push('/carts');
+    history.push("/carts");
   };
 
   const toggleFavorite = async () => {
     try {
-      const clientId = "680b67d60628614ec6ad91a8"; // 🔁 Remplace ça par un ID dynamique si besoin
-      //const clientId = JSON.parse(localStorage.getItem("user"))?._id;
-
+      const clientId = "680b67d60628614ec6ad91a8"; // à remplacer plus tard
       const data = {
         clientId,
         productId: product._id,
@@ -77,24 +82,14 @@ export default function ProductDetails() {
                   src={`http://localhost:5000/files/${product.image}`}
                 />
                 <h3 className="text-3xl font-semibold mt-6">{product.name}</h3>
-                <p className="mt-4 text-lg leading-relaxed text-blueGray-500">
-                  {product.description}
-                </p>
-                <p className="mt-4 text-xl font-bold text-blueGray-700">
-                  Price: {product.price} TND
-                </p>
-                <p className="mt-2 text-md text-blueGray-600">
-                  Stock: {product.stock}
-                </p>
+                <p className="mt-4 text-lg leading-relaxed text-blueGray-500">{product.description}</p>
+                <p className="mt-4 text-xl font-bold text-blueGray-700">Price: {product.price} TND</p>
+                <p className="mt-2 text-md text-blueGray-600">Stock: {product.stock}</p>
                 {product.material && (
-                  <p className="mt-2 text-md text-blueGray-600">
-                    Material: {product.material}
-                  </p>
+                  <p className="mt-2 text-md text-blueGray-600">Material: {product.material}</p>
                 )}
                 {product.type && (
-                  <p className="mt-2 text-md text-blueGray-600">
-                    Type: {product.type}
-                  </p>
+                  <p className="mt-2 text-md text-blueGray-600">Type: {product.type}</p>
                 )}
 
                 {/* Avis */}
@@ -117,15 +112,17 @@ export default function ProductDetails() {
                 </div>
 
                 {/* Boutons */}
-                <button 
-                  onClick={addToCart} 
-                  className="mt-4 bg-blue-500 text-white px-6 py-3 rounded-full shadow-md hover:bg-blue-600">
+                <button
+                  onClick={addToCart}
+                  className="mt-4 bg-blue-500 text-white px-6 py-3 rounded-full shadow-md hover:bg-blue-600"
+                >
                   Ajouter au panier
                 </button>
-                
-                <button 
-                  onClick={toggleFavorite} 
-                  className={`mt-4 ml-4 ${isFavorite ? 'bg-red-500' : 'bg-gray-500'} text-white px-6 py-3 rounded-full shadow-md hover:bg-${isFavorite ? 'red' : 'gray'}-600`}>
+
+                <button
+                  onClick={toggleFavorite}
+                  className={`mt-4 ml-4 ${isFavorite ? 'bg-red-500' : 'bg-gray-500'} text-white px-6 py-3 rounded-full shadow-md`}
+                >
                   {isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}
                 </button>
               </div>

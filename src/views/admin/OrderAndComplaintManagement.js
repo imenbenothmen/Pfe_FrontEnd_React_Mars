@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getAllOrders } from "../../services/Apiorder";
+import { getAllOrders, updateOrderStatus } from "../../services/Apiorder";
 import { getAllComplaints, updateComplaintStatus } from "../../services/Apicomplaint";
 
 export default function OrderAndComplaintManagement() {
@@ -8,27 +8,20 @@ export default function OrderAndComplaintManagement() {
   const [complaints, setComplaints] = useState([]);
 
   useEffect(() => {
-    // Récupérer les commandes
     getAllOrders()
-      .then((res) => {
-        setOrders(res.data);
-      })
+      .then((res) => setOrders(res.data))
       .catch((err) => console.error("Error fetching orders:", err));
 
-    // Récupérer les réclamations
     getAllComplaints()
-      .then((res) => {
-        setComplaints(res.data);
-      })
+      .then((res) => setComplaints(res.data))
       .catch((err) => console.error("Error fetching complaints:", err));
   }, []);
 
   const handleMarkAsResolved = async (id) => {
     try {
       await updateComplaintStatus(id, { status: "traitée" });
-      // Mettre à jour l'état local
-      setComplaints((prevComplaints) =>
-        prevComplaints.map((comp) =>
+      setComplaints((prev) =>
+        prev.map((comp) =>
           comp._id === id ? { ...comp, status: "traitée" } : comp
         )
       );
@@ -37,8 +30,20 @@ export default function OrderAndComplaintManagement() {
     }
   };
 
+  const handleMarkOrderAsCompleted = async (id) => {
+    try {
+      await updateOrderStatus(id, { status: "traitée" });
+      setOrders((prev) =>
+        prev.map((order) =>
+          order._id === id ? { ...order, status: "traitée" } : order
+        )
+      );
+    } catch (error) {
+      console.error("Erreur lors du traitement de la commande :", error);
+    }
+  };
+
   const handleContactClient = (clientEmail) => {
-    // Implémentez la logique pour contacter le client, par exemple en ouvrant un client de messagerie
     window.location.href = `mailto:${clientEmail}`;
   };
 
@@ -62,7 +67,15 @@ export default function OrderAndComplaintManagement() {
             <td className="p-2">{order.total} DT</td>
             <td className="p-2">{new Date(order.createdAt).toLocaleDateString()}</td>
             <td className="p-2">{order.status}</td>
-            <td className="p-2">
+            <td className="p-2 space-x-2">
+              {order.status !== "traitée" && (
+                <button
+                  className="text-green-600 hover:underline"
+                  onClick={() => handleMarkOrderAsCompleted(order._id)}
+                >
+                  Marquer comme traitée
+                </button>
+              )}
               <button className="text-blue-600 hover:underline">Éditer</button>
             </td>
           </tr>
@@ -92,12 +105,14 @@ export default function OrderAndComplaintManagement() {
             <td className="p-2">{new Date(comp.createdAt).toLocaleDateString()}</td>
             <td className="p-2">{comp.status}</td>
             <td className="p-2 space-x-2">
-              <button
-                className="text-green-600 hover:underline"
-                onClick={() => handleMarkAsResolved(comp._id)}
-              >
-                Marquer comme traitée
-              </button>
+              {comp.status !== "traitée" && (
+                <button
+                  className="text-green-600 hover:underline"
+                  onClick={() => handleMarkAsResolved(comp._id)}
+                >
+                  Marquer comme traitée
+                </button>
+              )}
               <button
                 className="text-blue-600 hover:underline"
                 onClick={() => handleContactClient(comp.client?.email)}

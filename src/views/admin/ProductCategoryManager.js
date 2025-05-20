@@ -9,7 +9,7 @@ import {
   addCategory,
   getCategories,
   deleteCategory,
-} from "../../services/Apicategory"; // Supprimer le `renameCategory` ici
+} from "../../services/Apicategory";
 
 export default function ProductCategoryManager() {
   const [products, setProducts] = useState([]);
@@ -23,7 +23,7 @@ export default function ProductCategoryManager() {
     category: "",
     material: "",
     type: "",
-    image: "", // à gérer avec multer si upload
+    image: null, // type File pour l’upload d’image
   });
 
   const [newCategory, setNewCategory] = useState({
@@ -59,6 +59,10 @@ export default function ProductCategoryManager() {
     setNewProduct({ ...newProduct, [name]: value });
   };
 
+  const handleImageChange = (e) => {
+    setNewProduct({ ...newProduct, image: e.target.files[0] });
+  };
+
   const handleCategoryChange = (e) => {
     const { name, value } = e.target;
     setNewCategory({ ...newCategory, [name]: value });
@@ -66,8 +70,24 @@ export default function ProductCategoryManager() {
 
   const handleAddProduct = async () => {
     try {
-      await addProduct(newProduct);
+      const formData = new FormData();
+      for (const key in newProduct) {
+        formData.append(key, newProduct[key]);
+      }
+
+      await addProduct(formData);
       fetchProducts();
+      // Réinitialiser le formulaire après ajout
+      setNewProduct({
+        name: "",
+        description: "",
+        price: 0,
+        stock: 0,
+        category: "",
+        material: "",
+        type: "",
+        image: null,
+      });
     } catch (err) {
       console.error(err);
     }
@@ -95,6 +115,7 @@ export default function ProductCategoryManager() {
     try {
       await addCategory(newCategory);
       fetchCategories();
+      setNewCategory({ nom: "", description: "" });
     } catch (err) {
       console.error(err);
     }
@@ -110,9 +131,7 @@ export default function ProductCategoryManager() {
   };
 
   const handleEditProduct = (prod) => {
-    setNewProduct({
-      ...prod,
-    });
+    setNewProduct({ ...prod });
   };
 
   return (
@@ -178,6 +197,15 @@ export default function ProductCategoryManager() {
         className="border p-2 m-1"
       />
 
+      {/* Upload d’image */}
+      <input
+        type="file"
+        name="image"
+        accept="image/*"
+        onChange={handleImageChange}
+        className="border p-2 m-1"
+      />
+
       <button
         onClick={newProduct._id ? () => handleUpdateProduct(newProduct._id) : handleAddProduct}
         className="bg-blue-500 text-white px-4 py-2 rounded m-2"
@@ -193,6 +221,7 @@ export default function ProductCategoryManager() {
             <th className="border p-2">Prix</th>
             <th className="border p-2">Stock</th>
             <th className="border p-2">Catégorie</th>
+            <th className="border p-2">Image</th>
             <th className="border p-2">Actions</th>
           </tr>
         </thead>
@@ -204,6 +233,15 @@ export default function ProductCategoryManager() {
               <td className="border p-2">{prod.stock}</td>
               <td className="border p-2">
                 {categories.find((c) => c._id === prod.category)?.nom || ""}
+              </td>
+              <td className="border p-2">
+                {prod.image && (
+                  <img
+                    src={`http://localhost:5000/files/${prod.image}`}
+                    alt={prod.name}
+                    className="w-16 h-16 object-cover"
+                  />
+                )}
               </td>
               <td className="border p-2">
                 <button

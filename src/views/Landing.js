@@ -124,7 +124,7 @@ export default function Landing() {
                         to={`/product/${product._id}`}
                         className="mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
                       >
-                        See details
+                        Voir les détails
                       </Link>
                     </div>
                   </div>
@@ -140,7 +140,7 @@ export default function Landing() {
                   currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
                 }`}
               >
-                Previous
+                Précédent
               </button>
               <span className="px-4 py-2 text-lg">
                 Page {currentPage} / {Math.ceil(products.length / itemsPerPage)}
@@ -154,7 +154,7 @@ export default function Landing() {
                     : ""
                 }`}
               >
-                Next
+                Suivant
               </button>
             </div>
 
