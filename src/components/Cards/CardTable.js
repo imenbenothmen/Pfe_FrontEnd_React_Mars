@@ -139,26 +139,124 @@ export default function CardTable({ color }) {
   });
 
   return (
-    <div
-      className={
-        "relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded " +
-        (color === "light" ? "bg-white" : "bg-lightBlue-900 text-white")
-      }
-    >
-      <div className="rounded-t mb-0 px-4 py-3 border-0">
-        <h3
-          className={
-            "font-semibold text-lg " +
-            (color === "light" ? "text-blueGray-700" : "text-white")
+    <>
+      <style jsx>{`
+        @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap");
+        .luxury-card {
+          background: #fff;
+          border-radius: 24px;
+          box-shadow: 0 8px 32px rgba(139, 115, 85, 0.12);
+          border: 1.5px solid #f0ece6;
+          padding: 40px 32px 32px 32px;
+          max-width: 1100px;
+          margin: 40px auto;
+          position: relative;
+        }
+        .luxury-title {
+          font-family: "Playfair Display", serif;
+          font-size: 2rem;
+          font-weight: 700;
+          color: #5a4a3a;
+          margin-bottom: 2rem;
+          text-align: center;
+        }
+        .luxury-table {
+          width: 100%;
+          border-collapse: separate;
+          border-spacing: 0;
+          font-family: "Inter", sans-serif;
+          background: #fff;
+        }
+        .luxury-table th,
+        .luxury-table td {
+          border-bottom: 1.5px solid #f0ece6;
+          padding: 14px 12px;
+          text-align: left;
+        }
+        .luxury-table th {
+          background: #f9f7f4;
+          color: #8b7355;
+          font-weight: 600;
+          font-size: 1.05rem;
+        }
+        .luxury-table tr:last-child td {
+          border-bottom: none;
+        }
+        .luxury-btn {
+          padding: 8px 18px;
+          border-radius: 24px;
+          border: none;
+          font-weight: 600;
+          font-family: "Inter", sans-serif;
+          font-size: 0.98rem;
+          margin-right: 8px;
+          margin-bottom: 4px;
+          cursor: pointer;
+          transition: all 0.2s;
+          box-shadow: 0 2px 8px rgba(185, 157, 98, 0.08);
+        }
+        .luxury-btn.green {
+          background: linear-gradient(45deg, #b6d7a8, #6fcf97);
+          color: #22543d;
+        }
+        .luxury-btn.green:hover {
+          background: linear-gradient(45deg, #6fcf97, #b6d7a8);
+        }
+        .luxury-btn.yellow {
+          background: linear-gradient(45deg, #ffe082, #ffd54f);
+          color: #8b7355;
+        }
+        .luxury-btn.yellow:hover {
+          background: linear-gradient(45deg, #ffd54f, #ffe082);
+        }
+        .luxury-btn.red {
+          background: linear-gradient(45deg, #ff8a80, #ff5252);
+          color: #fff;
+        }
+        .luxury-btn.red:hover {
+          background: linear-gradient(45deg, #ff5252, #ff8a80);
+        }
+        .luxury-btn.gray {
+          background: #f9f7f4;
+          color: #8b7355;
+        }
+        .luxury-btn.gray:hover {
+          background: #e8e3dd;
+        }
+        .luxury-input, .luxury-select {
+          border: 1.5px solid #d4c49a;
+          border-radius: 18px;
+          padding: 10px 16px;
+          font-size: 1rem;
+          margin: 0 6px 10px 0;
+          font-family: 'Inter', sans-serif;
+          background: #f9f7f4;
+          transition: border 0.2s;
+        }
+        .luxury-input:focus, .luxury-select:focus {
+          border-color: #b99d62;
+          outline: none;
+          background: #fffbe9;
+        }
+        @media (max-width: 900px) {
+          .luxury-card {
+            padding: 24px 4px 16px 4px;
           }
-        >
-          Gestion des utilisateurs
-        </h3>
-
+          .luxury-title {
+            font-size: 1.2rem;
+          }
+          .luxury-table th,
+          .luxury-table td {
+            padding: 8px 4px;
+            font-size: 0.95rem;
+          }
+        }
+      `}</style>
+      <div className="luxury-card">
+        <h3 className="luxury-title">Gestion des utilisateurs</h3>
         {errorMsg && (
           <div className="text-red-600 mb-2 font-semibold">{errorMsg}</div>
         )}
-
         <div className="my-3 flex flex-wrap items-center gap-2">
           <input
             type="text"
@@ -166,7 +264,7 @@ export default function CardTable({ color }) {
             name="username"
             value={newUser.username}
             onChange={handleChange}
-            className="border px-3 py-2 rounded text-black placeholder-gray-500 bg-white"
+            className="luxury-input"
           />
           <input
             type="email"
@@ -174,7 +272,7 @@ export default function CardTable({ color }) {
             name="email"
             value={newUser.email}
             onChange={handleChange}
-            className="border px-3 py-2 rounded text-black placeholder-gray-500 bg-white"
+            className="luxury-input"
           />
           <input
             type="password"
@@ -182,7 +280,7 @@ export default function CardTable({ color }) {
             name="password"
             value={newUser.password}
             onChange={handleChange}
-            className="border px-3 py-2 rounded text-black placeholder-gray-500 bg-white"
+            className="luxury-input"
           />
           <input
             type="text"
@@ -190,7 +288,7 @@ export default function CardTable({ color }) {
             name="phone"
             value={newUser.phone}
             onChange={handleChange}
-            className="border px-3 py-2 rounded text-black placeholder-gray-500 bg-white"
+            className="luxury-input"
           />
           {newUser.role === "client" && (
             <input
@@ -199,14 +297,14 @@ export default function CardTable({ color }) {
               name="delivery_address"
               value={newUser.delivery_address}
               onChange={handleChange}
-              className="border px-3 py-2 rounded text-black placeholder-gray-500 bg-white"
+              className="luxury-input"
             />
           )}
           <select
             name="role"
             value={newUser.role}
             onChange={handleChange}
-            className="border px-3 py-2 rounded text-black bg-white"
+            className="luxury-select"
           >
             <option value="client">Client</option>
             <option value="admin">Administrateur</option>
@@ -214,176 +312,175 @@ export default function CardTable({ color }) {
           <button
             onClick={addNewUser}
             disabled={!validateNewUser()}
-            className={`px-4 py-2 rounded ml-3 text-white ${
-              validateNewUser() ? "bg-blue-500 hover:bg-blue-700" : "bg-gray-400 cursor-not-allowed"
-            }`}
+            className={`luxury-btn green ${!validateNewUser() ? "opacity-50 cursor-not-allowed" : ""}`}
           >
             Ajouter utilisateur
           </button>
         </div>
-
         <div className="mt-4 flex flex-wrap items-center gap-4">
           <select
             value={filterRole}
             onChange={(e) => setFilterRole(e.target.value)}
-            className="border px-3 py-2 rounded text-black bg-white"
+            className="luxury-select"
           >
             <option value="all">Tous les rôles</option>
             <option value="client">Clients</option>
             <option value="admin">Administrateurs</option>
           </select>
-
           <input
             type="text"
             placeholder="Rechercher par nom ou email"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="border px-3 py-2 rounded text-black placeholder-gray-500 bg-white"
+            className="luxury-input"
           />
         </div>
-      </div>
-
-      <div className="overflow-x-auto">
-        {loading ? (
-          <div className="text-center p-4">Chargement...</div>
-        ) : (
-          <table className="w-full table-auto border-collapse border border-gray-300">
-            <thead>
-              <tr className="bg-gray-200 text-gray-700">
-                <th className="border px-4 py-2">Nom d'utilisateur</th>
-                <th className="border px-4 py-2">Email</th>
-                <th className="border px-4 py-2">Téléphone</th>
-                <th className="border px-4 py-2">Adresse de livraison</th>
-                <th className="border px-4 py-2">Rôle</th>
-                <th className="border px-4 py-2">Date d'inscription</th>
-                <th className="border px-4 py-2">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredUsers.length > 0 ? (
-                filteredUsers.map((user) => (
-                  <tr key={user._id}>
-                    <td className="border px-4 py-2">
-                      {editingUserId === user._id ? (
-                        <input
-                          type="text"
-                          name="username"
-                          value={editingUserData.username}
-                          onChange={handleEditChange}
-                          className="border rounded px-1 py-0.5 text-black"
-                        />
-                      ) : (
-                        user.username
-                      )}
-                    </td>
-                    <td className="border px-4 py-2">
-                      {editingUserId === user._id ? (
-                        <input
-                          type="email"
-                          name="email"
-                          value={editingUserData.email}
-                          onChange={handleEditChange}
-                          className="border rounded px-1 py-0.5 text-black"
-                        />
-                      ) : (
-                        user.email
-                      )}
-                    </td>
-                    <td className="border px-4 py-2">
-                      {editingUserId === user._id ? (
-                        <input
-                          type="text"
-                          name="phone"
-                          value={editingUserData.phone || ""}
-                          onChange={handleEditChange}
-                          className="border rounded px-1 py-0.5 text-black"
-                        />
-                      ) : (
-                        user.phone || "-"
-                      )}
-                    </td>
-                    <td className="border px-4 py-2">
-                      {editingUserId === user._id ? (
-                        editingUserData.role === "client" ? (
+        <div className="overflow-x-auto mt-4">
+          {loading ? (
+            <div className="text-center p-4">Chargement...</div>
+          ) : (
+            <table className="luxury-table">
+              <thead>
+                <tr>
+                  <th>Nom d'utilisateur</th>
+                  <th>Email</th>
+                  <th>Téléphone</th>
+                  <th>Adresse de livraison</th>
+                  <th>Rôle</th>
+                  <th>Date d'inscription</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredUsers.length > 0 ? (
+                  filteredUsers.map((user) => (
+                    <tr key={user._id}>
+                      <td>
+                        {editingUserId === user._id ? (
                           <input
                             type="text"
-                            name="delivery_address"
-                            value={editingUserData.delivery_address || ""}
+                            name="username"
+                            value={editingUserData.username}
                             onChange={handleEditChange}
-                            className="border rounded px-1 py-0.5 text-black"
+                            className="luxury-input"
+                            style={{ minWidth: 80 }}
                           />
                         ) : (
-                          "-"
-                        )
-                      ) : (
-                        user.delivery_address || "-"
-                      )}
-                    </td>
-                    <td className="border px-4 py-2">
-                      {editingUserId === user._id ? (
-                        <select
-                          name="role"
-                          value={editingUserData.role}
-                          onChange={handleEditChange}
-                          className="border rounded px-1 py-0.5 text-black bg-white"
-                        >
-                          <option value="client">Client</option>
-                          <option value="admin">Administrateur</option>
-                        </select>
-                      ) : (
-                        user.role
-                      )}
-                    </td>
-                    <td className="border px-4 py-2">
-                      {new Date(user.createdAt).toLocaleDateString()}
-                    </td>
-                    <td className="border px-4 py-2 space-x-1">
-                      {editingUserId === user._id ? (
-                        <>
-                          <button
-                            onClick={saveEdit}
-                            className="bg-green-600 hover:bg-green-800 text-white font-bold py-1 px-3 rounded"
+                          user.username
+                        )}
+                      </td>
+                      <td>
+                        {editingUserId === user._id ? (
+                          <input
+                            type="email"
+                            name="email"
+                            value={editingUserData.email}
+                            onChange={handleEditChange}
+                            className="luxury-input"
+                            style={{ minWidth: 120 }}
+                          />
+                        ) : (
+                          user.email
+                        )}
+                      </td>
+                      <td>
+                        {editingUserId === user._id ? (
+                          <input
+                            type="text"
+                            name="phone"
+                            value={editingUserData.phone || ""}
+                            onChange={handleEditChange}
+                            className="luxury-input"
+                            style={{ minWidth: 80 }}
+                          />
+                        ) : (
+                          user.phone || "-"
+                        )}
+                      </td>
+                      <td>
+                        {editingUserId === user._id ? (
+                          editingUserData.role === "client" ? (
+                            <input
+                              type="text"
+                              name="delivery_address"
+                              value={editingUserData.delivery_address || ""}
+                              onChange={handleEditChange}
+                              className="luxury-input"
+                              style={{ minWidth: 120 }}
+                            />
+                          ) : (
+                            "-"
+                          )
+                        ) : (
+                          user.delivery_address || "-"
+                        )}
+                      </td>
+                      <td>
+                        {editingUserId === user._id ? (
+                          <select
+                            name="role"
+                            value={editingUserData.role}
+                            onChange={handleEditChange}
+                            className="luxury-select"
                           >
-                            Sauvegarder
-                          </button>
-                          <button
-                            onClick={cancelEditing}
-                            className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-1 px-3 rounded"
-                          >
-                            Annuler
-                          </button>
-                        </>
-                      ) : (
-                        <>
-                          <button
-                            onClick={() => startEditing(user)}
-                            className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-1 px-3 rounded"
-                          >
-                            Modifier
-                          </button>
-                          <button
-                            onClick={() => deleteUser(user._id)}
-                            className="bg-red-600 hover:bg-red-800 text-white font-bold py-1 px-3 rounded"
-                          >
-                            Supprimer
-                          </button>
-                        </>
-                      )}
+                            <option value="client">Client</option>
+                            <option value="admin">Administrateur</option>
+                          </select>
+                        ) : (
+                          user.role
+                        )}
+                      </td>
+                      <td>
+                        {new Date(user.createdAt).toLocaleDateString()}
+                      </td>
+                      <td>
+                        {editingUserId === user._id ? (
+                          <>
+                            <button
+                              onClick={saveEdit}
+                              className="luxury-btn green"
+                            >
+                              Sauvegarder
+                            </button>
+                            <button
+                              onClick={cancelEditing}
+                              className="luxury-btn gray"
+                            >
+                              Annuler
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <button
+                              onClick={() => startEditing(user)}
+                              className="luxury-btn yellow"
+                            >
+                              Modifier
+                            </button>
+                            <button
+                              onClick={() => deleteUser(user._id)}
+                              className="luxury-btn red"
+                            >
+                              Supprimer
+                            </button>
+                          </>
+                        )}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="7" className="text-center py-4">
+                      Aucun utilisateur trouvé.
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="7" className="text-center py-4">
-                    Aucun utilisateur trouvé.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        )}
+                )}
+              </tbody>
+            </table>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

@@ -36,7 +36,7 @@ export default function Admin() {
             <PrivateRouteAdmin path="/admin/settings" exact component={Settings} />
             <PrivateRouteAdmin path="/admin/tables" exact component={Tables} />
             <PrivateRouteAdmin path="/admin/produits-categories" exact component={ProductCategoryManager} />
-            <PrivateRouteAdmin path="/admin/commandes-reclamations" exact component={OrderAndComplaintManagement} />
+            <PrivateRouteAdmin path="/admin/commandes" exact component={OrderAndComplaintManagement} />
             <Redirect from="/admin" to="/admin/dashboard" />
           </Switch>
         </div>

@@ -17,78 +17,182 @@ export default function CardProfile({ data, editMode, onEdit, onCancel, onUpdate
     onUpdate(formData);
   };
 
-  if (editMode) {
-    return (
-      <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64 p-6">
-        <h3 className="text-xl font-semibold mb-4">Modifier Profil</h3>
-        <form onSubmit={handleSubmit}>
-          {["username", "email", "phone", "delivery_address"].map((field) => (
-            <div key={field} className="mb-4">
-              <label className="block text-blueGray-600 capitalize mb-1">{field.replace("_", " ")}</label>
-              <input
-                type={field === "email" ? "email" : "text"}
-                name={field}
-                value={formData[field] || ""}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-lightBlue-500"
-              />
-            </div>
-          ))}
-
-          <div className="flex justify-end">
-            <button
-              type="button"
-              onClick={onCancel}
-              className="mr-4 px-5 py-2 border-2 border-pink-500 text-pink-500 font-semibold rounded-full bg-white hover:bg-pink-50 transition"
-            >
-              Annuler
-            </button>
-            <button
-              type="submit"
-              className="px-5 py-2 border-2 border-pink-500 text-pink-500 font-semibold rounded-full bg-white hover:bg-pink-50 transition"
-            >
-              Sauvegarder
-            </button>
-          </div>
-        </form>
-      </div>
-    );
-  }
-
   return (
-    <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64">
-      <div className="px-6">
-        <div className="flex flex-wrap justify-center">
-          <div className="w-full lg:w-3/12 px-4 flex justify-center">
-            <div className="relative">
-              <img
-                alt="..."
-                src={`http://localhost:5000/files/${data.user_image}`}
-                className="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px"
-              />
+    <>
+      <style jsx>{`
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+        .luxury-card {
+          background: #fff;
+          border-radius: 24px;
+          box-shadow: 0 8px 32px rgba(139, 115, 85, 0.12);
+          border: 1.5px solid #f0ece6;
+          padding: 48px 32px 32px 32px;
+          margin-top: -120px;
+          max-width: 600px;
+          margin-left: auto;
+          margin-right: auto;
+          position: relative;
+        }
+        .luxury-avatar {
+          width: 140px;
+          height: 140px;
+          object-fit: cover;
+          border-radius: 50%;
+          border: 4px solid #d4c49a;
+          box-shadow: 0 4px 24px rgba(185, 157, 98, 0.15);
+          background: linear-gradient(135deg, #f8f6f3, #f0ece6);
+          margin: 0 auto;
+          display: block;
+          position: relative;
+          top: -90px;
+          z-index: 2;
+        }
+        .luxury-title {
+          font-family: 'Playfair Display', serif;
+          font-size: 2.2rem;
+          font-weight: 700;
+          color: #5a4a3a;
+          margin-bottom: 0.5rem;
+          text-align: center;
+        }
+        .luxury-info {
+          color: #6b5b4f;
+          font-size: 1.1rem;
+          margin-bottom: 0.5rem;
+          text-align: center;
+          font-family: 'Inter', sans-serif;
+        }
+        .luxury-form label {
+          color: #8b7355;
+          font-weight: 500;
+          font-family: 'Inter', sans-serif;
+          margin-bottom: 0.3rem;
+        }
+        .luxury-form input {
+          width: 100%;
+          border: 1.5px solid #d4c49a;
+          border-radius: 18px;
+          padding: 12px 18px;
+          font-size: 1rem;
+          margin-bottom: 18px;
+          font-family: 'Inter', sans-serif;
+          background: #f9f7f4;
+          transition: border 0.2s;
+        }
+        .luxury-form input:focus {
+          border-color: #b99d62;
+          outline: none;
+          background: #fffbe9;
+        }
+        .luxury-btn {
+          padding: 12px 32px;
+          border-radius: 30px;
+          border: 2px solid #b99d62;
+          background: linear-gradient(45deg, #b99d62, #d4c49a);
+          color: #fff;
+          font-weight: 600;
+          font-family: 'Inter', sans-serif;
+          font-size: 1rem;
+          cursor: pointer;
+          transition: all 0.2s;
+          margin: 0 8px;
+          box-shadow: 0 2px 8px rgba(185, 157, 98, 0.08);
+        }
+        .luxury-btn:hover {
+          background: linear-gradient(45deg, #a08854, #c9b086);
+          color: #fff;
+          border-color: #8b7355;
+          transform: translateY(-2px) scale(1.03);
+        }
+        .luxury-btn.secondary {
+          background: #fff;
+          color: #b99d62;
+          border: 2px solid #b99d62;
+        }
+        .luxury-btn.secondary:hover {
+          background: #f9f7f4;
+          color: #8b7355;
+        }
+        .luxury-actions {
+          display: flex;
+          justify-content: center;
+          gap: 12px;
+          margin-top: 24px;
+        }
+        @media (max-width: 600px) {
+          .luxury-card {
+            padding: 32px 8px 24px 8px;
+          }
+          .luxury-avatar {
+            width: 100px;
+            height: 100px;
+            top: -60px;
+          }
+          .luxury-title {
+            font-size: 1.4rem;
+          }
+        }
+      `}</style>
+      {editMode ? (
+        <div className="luxury-card">
+          <img
+            alt="avatar"
+            src={`http://localhost:5000/files/${data.user_image}`}
+            className="luxury-avatar"
+            style={{ marginBottom: '-60px' }}
+          />
+          <h3 className="luxury-title" style={{ marginTop: '0.5rem' }}>Modifier Profil</h3>
+          <form className="luxury-form" onSubmit={handleSubmit}>
+            {["username", "email", "phone", "delivery_address"].map((field) => (
+              <div key={field}>
+                <label>{field.replace("_", " ")}</label>
+                <input
+                  type={field === "email" ? "email" : "text"}
+                  name={field}
+                  value={formData[field] || ""}
+                  onChange={handleChange}
+                  autoComplete="off"
+                />
+              </div>
+            ))}
+            <div className="luxury-actions">
+              <button
+                type="button"
+                onClick={onCancel}
+                className="luxury-btn secondary"
+              >
+                Annuler
+              </button>
+              <button
+                type="submit"
+                className="luxury-btn"
+              >
+                Sauvegarder
+              </button>
             </div>
-          </div>
-          <div className="w-full lg:w-4/12 px-4 text-center mt-20">
-            <h3 className="text-4xl font-semibold leading-normal text-blueGray-700">
-              {data.username}
-            </h3>
-            <p className="text-sm text-blueGray-400">{data.email}</p>
-            <p className="text-sm text-blueGray-400">{data.phone}</p>
-            <p className="text-sm text-blueGray-400">{data.delivery_address}</p>
-          </div>
+          </form>
         </div>
-
-        <div className="mt-10 py-10 border-t border-blueGray-200 text-center">
-          <div className="w-full lg:w-9/12 px-4 mx-auto">
+      ) : (
+        <div className="luxury-card">
+          <img
+            alt="avatar"
+            src={`http://localhost:5000/files/${data.user_image}`}
+            className="luxury-avatar"
+          />
+          <h3 className="luxury-title">{data.username}</h3>
+          <div className="luxury-info">{data.email}</div>
+          <div className="luxury-info">{data.phone}</div>
+          <div className="luxury-info">{data.delivery_address}</div>
+          <div className="luxury-actions">
             <button
               onClick={onEdit}
-              className="inline-block px-6 py-3 border-2 border-pink-500 text-pink-500 font-semibold rounded-full bg-white shadow hover:bg-pink-50 transition"
+              className="luxury-btn"
             >
               Modifier le profil
             </button>
           </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 }

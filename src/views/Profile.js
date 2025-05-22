@@ -34,55 +34,94 @@ export default function Profile() {
 
   return (
     <>
-      <Navbar transparent />
-      <main className="profile-page">
-        <section className="relative block h-500-px">
-          <div
-            className="absolute top-0 w-full h-full bg-center bg-cover"
-            style={{
-              backgroundImage:
-                "url('https://images.unsplash.com/photo-1499336315816-097655dcfbda?ixlib=rb-1.2.1&auto=format&fit=crop&w=2710&q=80')",
-            }}
-          >
-            <span
-              id="blackOverlay"
-              className="w-full h-full absolute opacity-50 bg-black"
-            ></span>
-          </div>
-          <div
-            className="top-auto bottom-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden h-70-px"
-            style={{ transform: "translateZ(0)" }}
-          >
-            <svg
-              className="absolute bottom-0 overflow-hidden"
-              xmlns="http://www.w3.org/2000/svg"
-              preserveAspectRatio="none"
-              version="1.1"
-              viewBox="0 0 2560 100"
-              x="0"
-              y="0"
-            >
-              <polygon
-                className="text-blueGray-200 fill-current"
-                points="2560 0 2560 100 0 100"
-              ></polygon>
-            </svg>
+      <style jsx>{`
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+        .luxury-container {
+          font-family: 'Inter', sans-serif;
+          background: linear-gradient(135deg, #fefefe 0%, #f8f6f3 50%, #f5f2ef 100%);
+          min-height: 100vh;
+          color: #2c2826;
+        }
+        .hero-section-profile {
+          padding: 100px 0 60px;
+          text-align: center;
+          background: linear-gradient(135deg, #ffffff 0%, #f9f7f4 100%);
+          position: relative;
+          overflow: hidden;
+          border-bottom: 1px solid #e8e3dd;
+        }
+        .hero-section-profile::before {
+          content: '';
+          position: absolute;
+          top: -50%;
+          left: -50%;
+          width: 200%;
+          height: 200%;
+          background: radial-gradient(ellipse, rgba(185, 157, 98, 0.08) 0%, transparent 70%);
+          animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        .hero-content-profile {
+          position: relative;
+          z-index: 2;
+        }
+        .hero-title-profile {
+          font-family: 'Playfair Display', serif;
+          font-size: 3rem;
+          font-weight: 700;
+          margin-bottom: 1rem;
+          background: linear-gradient(45deg, #b99d62, #d4c49a, #8b7355);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          text-shadow: 0 2px 4px rgba(139, 115, 85, 0.1);
+        }
+        .hero-subtitle-profile {
+          font-size: 1.2rem;
+          color: #6b5b4f;
+          margin-bottom: 1.5rem;
+          font-style: italic;
+          font-weight: 300;
+          letter-spacing: 0.5px;
+        }
+        @media (max-width: 768px) {
+          .hero-title-profile {
+            font-size: 2rem;
+          }
+          .hero-subtitle-profile {
+            font-size: 1rem;
+          }
+        }
+      `}</style>
+      <div className="luxury-container">
+        <Navbar transparent />
+        {/* Hero Section for Profile */}
+        <section className="hero-section-profile">
+          <div className="hero-content-profile">
+            <h1 className="hero-title-profile">Mon Profil</h1>
+            <p className="hero-subtitle-profile">
+              Retrouvez et modifiez vos informations personnelles en toute élégance.
+            </p>
           </div>
         </section>
-
-        <section className="relative py-16 bg-blueGray-200">
-          <div className="container mx-auto px-4">
-            <CardProfile
-              data={profileData}
-              editMode={editMode}
-              onEdit={() => setEditMode(true)}
-              onCancel={() => setEditMode(false)}
-              onUpdate={handleUpdate}
-            />
-          </div>
-        </section>
-      </main>
-      <Footer />
+        <main className="profile-page">
+          <section className="relative py-16 bg-blueGray-200">
+            <div className="container mx-auto px-4">
+              <CardProfile
+                data={profileData}
+                editMode={editMode}
+                onEdit={() => setEditMode(true)}
+                onCancel={() => setEditMode(false)}
+                onUpdate={handleUpdate}
+              />
+            </div>
+          </section>
+        </main>
+        <Footer />
+      </div>
     </>
   );
 }
