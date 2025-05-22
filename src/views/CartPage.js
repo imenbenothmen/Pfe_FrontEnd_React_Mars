@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footers/Footer.js";
+import { addOrder } from "../services/Apiorder"; // 🔁 importe la fonction
 
 export default function CartPage() {
   const [cart, setCart] = useState([]);
@@ -30,11 +31,32 @@ export default function CartPage() {
     setCart(updatedCart);
   };
 
-  const handleCheckout = () => {
-    console.log("Commande passée :", cart);
-    alert("Commande envoyée avec succès !");
-    setCart([]);
-    localStorage.removeItem("cart");
+  const handleCheckout = async () => {
+    const user = JSON.parse(localStorage.getItem("user")); // 🔍 récupérer l'utilisateur connecté
+    if (!user || !user._id) {
+      alert("Veuillez vous connecter pour passer une commande.");
+      return;
+    }
+
+    const orderData = {
+      client: user._id,
+      products: cart.map((p) => ({
+        product: p._id,
+        quantity: p.quantity,
+        price: p.price,
+      })),
+      total: getTotalPrice(),
+    };
+
+    try {
+      await addOrder(orderData);
+      alert("Commande envoyée avec succès !");
+      setCart([]);
+      localStorage.removeItem("cart");
+    } catch (error) {
+      console.error("Erreur lors du passage de la commande :", error);
+      alert("Erreur lors de l'envoi de la commande.");
+    }
   };
 
   return (
