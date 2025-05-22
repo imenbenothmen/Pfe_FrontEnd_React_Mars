@@ -6,8 +6,10 @@ const apiurl = 'http://localhost:5000/users'
 
 // GET requests
 
+
+
 export async function getAllUsers() {
-    return await axios.get(`${apiurl}/getAllUsers`);
+    return await axios.get(`${apiurl}/getAllUsers`,{ withCredentials: true });
 }
   
 export async function getUserById(id) {
@@ -22,11 +24,11 @@ export async function searchUserByUsername(username) {
 
 
 export async function getAllClient() {
-    return await axios.get(`${apiurl}/getAllClient`)
+    return await axios.get(`${apiurl}/getAllClient`,{ withCredentials: true });
 }
 
 export async function getAllAdmin() {
-    return await axios.get(`${apiurl}/getAllAdmin`)
+    return await axios.get(`${apiurl}/getAllAdmin`,{ withCredentials: true });
 }
 
 // POST requests
@@ -39,8 +41,11 @@ export async function addUserLivreur(userData) {
 }
 
 export async function addUserAdmin(userData) {
-    return await axios.post(`${apiurl}/addUserAdmin`, userData)
+    return await axios.post(`${apiurl}/addUserAdmin`, userData, {
+        withCredentials: true
+    });
 }
+
 
 export async function addUserClientWithImg(formData) {
     return await axios.post(`${apiurl}/addUserClientWithImg`, formData, {

@@ -1,5 +1,6 @@
 import React from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Redirect } from "react-router-dom";
+
 
 // components
 import AdminNavbar from "components/Navbars/AdminNavbar.js";
@@ -15,6 +16,10 @@ import Tables from "views/admin/Tables.js";
 import ProductCategoryManager from "views/admin/ProductCategoryManager.js";
 import OrderAndComplaintManagement from "views/admin/OrderAndComplaintManagement.js";
 
+// routes 
+// 🔐 Import de la route protégée admin
+import PrivateRouteAdmin from "routes/PrivateRouteAdmin";
+
 export default function Admin() {
   return (
     <>
@@ -26,12 +31,12 @@ export default function Admin() {
         {/* Main content area that grows */}
         <div className="flex-grow px-4 md:px-10 mx-auto w-full py-4">
           <Switch>
-            <Route path="/admin/dashboard" exact component={Dashboard} />
-            <Route path="/admin/maps" exact component={Maps} />
-            <Route path="/admin/settings" exact component={Settings} />
-            <Route path="/admin/tables" exact component={Tables} />
-            <Route path="/admin/produits-categories" exact component={ProductCategoryManager} />
-            <Route path="/admin/commandes-reclamations" exact component={OrderAndComplaintManagement} />
+            <PrivateRouteAdmin path="/admin/dashboard" exact component={Dashboard} />
+            <PrivateRouteAdmin path="/admin/maps" exact component={Maps} />
+            <PrivateRouteAdmin path="/admin/settings" exact component={Settings} />
+            <PrivateRouteAdmin path="/admin/tables" exact component={Tables} />
+            <PrivateRouteAdmin path="/admin/produits-categories" exact component={ProductCategoryManager} />
+            <PrivateRouteAdmin path="/admin/commandes-reclamations" exact component={OrderAndComplaintManagement} />
             <Redirect from="/admin" to="/admin/dashboard" />
           </Switch>
         </div>

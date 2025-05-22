@@ -62,7 +62,7 @@ export default function OrderAndComplaintManagement() {
       <tbody>
         {orders.map((order) => (
           <tr key={order._id} className="border-b">
-            <td className="p-2">{order.client?.name}</td>
+            <td className="p-2">{order.client?.email}</td>
             <td className="p-2">{order.products.length} articles</td>
             <td className="p-2">{order.total} DT</td>
             <td className="p-2">{new Date(order.createdAt).toLocaleDateString()}</td>

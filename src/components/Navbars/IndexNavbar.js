@@ -1,30 +1,37 @@
 /*eslint-disable*/
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-
-
+import { Link, useHistory } from "react-router-dom";
+import { getCurrentUser } from "../../services/auth";
 
 // components
-
-import IndexDropdown from "components/Dropdowns/IndexDropdown.js";
-
-
-
+// import IndexDropdown from "components/Dropdowns/IndexDropdown.js";
+import UserDropdown from "components/Dropdowns/UserDropdown.js";
 
 export default function Navbar(props) {
-
-
   const [navbarOpen, setNavbarOpen] = React.useState(false);
-  const [searchVisible, setSearchVisible] = useState(false); // Gérer la visibilité du champ de recherche
-  // Fonction pour afficher/masquer le champ de recherche
+  const [searchVisible, setSearchVisible] = useState(false);
+
+  const user = getCurrentUser();
+  const isAdmin = user && user.role === "admin";
+  const isClient = user && user.role === "client";
+
+  const history = useHistory();
+
   const toggleSearch = () => {
     setSearchVisible(!searchVisible);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    history.push("/welcome");
+    window.location.reload();
   };
 
   return (
     <>
       <nav className="top-0 fixed z-50 w-full flex flex-wrap items-center justify-between px-2 py-3 navbar-expand-lg bg-white shadow">
         <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
+          {/* Gauche : logo + menu hamburger */}
           <div className="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
             <Link
               to="/"
@@ -41,7 +48,7 @@ export default function Navbar(props) {
             </button>
           </div>
 
-
+          {/* Centre + droite */}
           <div
             className={
               "lg:flex flex-grow items-center bg-white lg:bg-opacity-0 lg:shadow-none" +
@@ -49,123 +56,105 @@ export default function Navbar(props) {
             }
             id="example-navbar-warning"
           >
-            {/* <ul className="flex flex-col lg:flex-row list-none mr-auto">
-              <li className="flex items-center">
-                <a
-                  className="hover:text-blueGray-500 text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold"
-                  href="https://www.creative-tim.com/learning-lab/tailwind/react/overview/notus?ref=nr-index-navbar"
-                >
-                  <i className="text-blueGray-400 far fa-file-alt text-lg leading-lg mr-2" />{" "}
-                  Docs
-                </a>
-              </li>
-            </ul> */}
-            <ul className="flex flex-col lg:flex-row list-none lg:ml-auto">
-              <li className="flex items-center">
-                <IndexDropdown />
-              </li>
+            <ul className="flex flex-col lg:flex-row list-none lg:ml-auto items-center">
+              {/* Recherche + favoris + panier (pour client uniquement) */}
+              {!isAdmin && (
+                <>
+                  {/* Recherche */}
+                  <li className="flex items-center">
+                    <button
+                      className="text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold"
+                      onClick={toggleSearch}
+                    >
+                      <i className="fas fa-search text-lg leading-lg" />
+                      <span className="lg:hidden inline-block ml-2">search</span>
+                    </button>
+                  </li>
 
+                  {searchVisible && (
+                    <li className="flex items-center">
+                      <input
+                        type="text"
+                        placeholder="Rechercher..."
+                        className="px-3 py-2 rounded border border-gray-300"
+                      />
+                    </li>
+                  )}
 
-              {/* <li className="flex items-center">
-                <a
-                  className="hover:text-blueGray-500 text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold"
-                  href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdemos.creative-tim.com%2Fnotus-react%2F%23%2F"
-                  target="_blank"
-                >
-                  <i className="text-blueGray-400 fab fa-facebook text-lg leading-lg " />
-                  <span className="lg:hidden inline-block ml-2">Share</span>
-                </a>
-              </li> */}
+                  {/* Favoris */}
+                  <li className="flex items-center">
+                    <Link
+                      to="/favorites"
+                      className="hover:text-blueGray-500 text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold"
+                    >
+                      <i className="fas fa-heart text-blueGray-700 text-lg" />
+                      <span className="lg:hidden inline-block ml-2">Favorites</span>
+                    </Link>
+                  </li>
 
+                  {/* Panier */}
+                  <li className="flex items-center">
+                    <Link
+                      to="/carts"
+                      className="hover:text-blueGray-500 text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold"
+                    >
+                      <i className="fas fa-shopping-cart text-lg leading-lg" />
+                      <span className="lg:hidden inline-block ml-2">cart</span>
+                    </Link>
+                  </li>
+                </>
+              )}
 
-
-
-
-              {/* <li className="flex items-center">
-                <button
-                  className="bg-lightBlue-500 text-white active:bg-lightBlue-600 text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none lg:mr-1 lg:mb-0 ml-3 mb-3 ease-linear transition-all duration-150"
-                  type="button"
-                >
-                  <i className="fas fa-arrow-alt-circle-down"></i> Download
-                </button>
-              </li> */}
-
-              {/* Connexion */}
-              <li className="flex items-center">
-                <Link
-                  to="/auth" // Lien vers la page de connexion
-                  className="hover:text-blueGray-500 text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold"
-                >
-                  {/* Icône cercle avec icône utilisateur */}
-                  
-                
-                    <div>
-                  
-                     <i className="fas fa-user text-blueGray-700 text-lg"/>
-                     
-    </div>
-
-                  
-                  <span className="lg:hidden inline-block ml-2">Login</span>
-                </Link>
-              </li>
-
-
-
-
-
-
-              {/* Icône de recherche */}
-              <li className="flex items-center">
-                <button
-                  className="text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold"
-                  onClick={toggleSearch} // Lorsqu'on clique sur l'icône de recherche, on affiche/masque le champ
-                >
-                  <i className="fas fa-search text-lg leading-lg" />
-                  <span className="lg:hidden inline-block ml-2">search</span>
-                </button>
-              </li>
-
-              {/* Champ de recherche */}
-              {searchVisible && (
+              {/* Connexion visible uniquement si aucun user n'est connecté */}
+              {!user && (
                 <li className="flex items-center">
-                  <input
-                    type="text"
-                    placeholder="Rechercher..."
-                    className="px-3 py-2 rounded border border-gray-300"
-                  />
+                  <Link
+                    to="/auth"
+                    className="hover:text-blueGray-500 text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold"
+                  >
+                    <i className="fas fa-user text-blueGray-700 text-lg" />
+                    <span className="lg:hidden inline-block ml-2">Login</span>
+                  </Link>
                 </li>
               )}
 
+              {/* Avatar client avec dropdown */}
+              {isClient && (
+                <li className="relative flex items-center group">
+                  <button className="flex items-center px-3 py-4 lg:py-2 text-xs uppercase font-bold text-blueGray-700 focus:outline-none">
+                    <img
+                      src={user.user_image || "https://i.pravatar.cc/40"}
+                      alt="avatar"
+                      className="w-8 h-8 rounded-full"
+                    />
+                  </button>
+                  <ul className="absolute right-0 top-12 bg-white shadow-md rounded hidden group-hover:block z-50 min-w-[140px]">
+                    <li>
+                      <Link
+                        to="/profile"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        Mon profil
+                      </Link>
+                    </li>
+                    <li>
+                      <button
+                        onClick={handleLogout}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        Déconnexion
+                      </button>
+                    </li>
+                  </ul>
+                </li>
+              )}
 
-{/* Favoris */}
-<li className="flex items-center">
-  <Link
-    to="/favorites" // Lien vers la page des favoris
-    className="hover:text-blueGray-500 text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold"
-  >
-    {/* Icône cercle avec icône de favoris */}
-    
-      <i className="fas fa-heart text-blueGray-700 text-lg" /> {/* Icône de cœur */}
-    
-    <span className="lg:hidden inline-block ml-2">Favorites</span> {/* Texte caché sur mobile */}
-  </Link>
-</li>
-
-
-              {/* Icône du panier */}
-              <li className="flex items-center">
-                <Link
-                  to="/carts"
-                  className="hover:text-blueGray-500 text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold"
-                >
-                  <i className="fas fa-shopping-cart text-lg leading-lg" />
-                  <span className="lg:hidden inline-block ml-2">cart</span>
-                </Link>
-              </li>
-
-              
-
+              {/* Avatar admin */}
+              {isAdmin && (
+                <li className="flex items-center">
+                  <UserDropdown />
+                </li>
+              )}
             </ul>
           </div>
         </div>

@@ -1,17 +1,30 @@
 import axios from 'axios';
 
-const apiUrl = 'http://localhost:5000';
-//const apiurl = "http://localhost:5000/orders";
+const apiUrl = 'http://localhost:5000/orders';
+
+
+
+// ✅ POST – Ajouter une commande manuellement
+export async function addOrder(orderData) {
+  try {
+    const response = await axios.post(`${apiUrl}/addOrder`, orderData, {
+       // si tu utilises des cookies pour l'auth
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Erreur inattendue' };
+  }
+}
 
 // GET – Get all orders (for admin)
 export async function getAllOrders() {
-  return await axios.get(`${apiUrl}/orders`);
+  return await axios.get(`${apiUrl}`);
 }
 
 
 // POST – Create an order
 export async function createOrder(data) {
-  return await axios.post(`${apiUrl}/order`, data);
+  return await axios.post(`${apiUrl}`, data);
 }
 
 // GET – Get all orders for a specific client
@@ -21,7 +34,7 @@ export async function getOrdersByClient(clientId) {
 
 // PUT – Update the status of an order
 export async function updateOrderStatus(orderId, data) {
-  return await axios.put(`${apiUrl}/order/${orderId}/status`, data);
+  return await axios.put(`${apiUrl}${orderId}/status`, data);
 }
 
 // PUT – Cancel an order

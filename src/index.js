@@ -18,6 +18,7 @@ import Welcome from "views/Welcome.js";
 import ProductDetails from "views/ProductDetails.js"; //  importe ta page
 import CartPage from "views/CartPage.js";  // <-- Importer ta nouvelle page panier
 import FavoritesPage from "views/FavoritesPage.js";
+import Unauthorized from "views/Unauthorized";
 
 
 ReactDOM.render(
@@ -34,7 +35,7 @@ ReactDOM.render(
       <Route path="/favorites" exact component={FavoritesPage} />
      
       <Route path="/" exact component={Welcome} />
-
+     <Route path="/unauthorized" exact component={Unauthorized} />
       {/* add redirect for first page */}
       <Redirect from="*" to="/" />
     </Switch>

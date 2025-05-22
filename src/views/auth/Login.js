@@ -25,23 +25,28 @@ export default function Login() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',  // TRÈS IMPORTANT pour envoyer/recevoir le cookie JWT
         body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
       console.log('Réponse du backend :', data);
 
-      if (data.success) {
+      if (response.ok && data.user) {
         // Sauvegarder les informations de l'utilisateur dans le localStorage si nécessaire
         localStorage.setItem('user', JSON.stringify(data.user));
         console.log('✅ Connexion réussie pour :', data.user.email);
 
-        // Redirection après connexion réussie
-        history.push('/favorites');
+         // 🔁 Redirection selon le rôle
+  if (data.user.role === 'admin') {
+    history.push('/admin/Tables'); // (à créer après)
+  } else {
+    history.push('/profile'); // (client)
+  }
       } else {
         // Erreur dans les informations de connexion
-        console.warn('❌ Échec de la connexion :', data.message);
-        setError(data.message); // Affiche le message d'erreur du backend
+        console.warn('❌ Échec de la connexion :', data.message || 'Erreur inconnue')
+        setError(data.message || 'Email ou mot de passe incorrect'); // Affiche le message d'erreur du backend
       }
 
     } catch (err) {
