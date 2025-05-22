@@ -1,5 +1,5 @@
 /*eslint-disable*/
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { getCurrentUser } from "../../services/auth";
 
@@ -8,8 +8,9 @@ import { getCurrentUser } from "../../services/auth";
 import UserDropdown from "components/Dropdowns/UserDropdown.js";
 
 export default function Navbar(props) {
-  const [navbarOpen, setNavbarOpen] = React.useState(false);
+  const [navbarOpen, setNavbarOpen] = useState(false);
   const [searchVisible, setSearchVisible] = useState(false);
+  const [clientDropdownOpen, setClientDropdownOpen] = useState(false);
 
   const user = getCurrentUser();
   const isAdmin = user && user.role === "admin";
@@ -26,6 +27,18 @@ export default function Navbar(props) {
     history.push("/welcome");
     window.location.reload();
   };
+
+  // Fermer le dropdown client si on clique à l’extérieur
+  const dropdownRef = useRef(null);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setClientDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <>
@@ -118,34 +131,43 @@ export default function Navbar(props) {
                 </li>
               )}
 
-              {/* Avatar client avec dropdown */}
+              {/* Avatar client avec dropdown au clic */}
               {isClient && (
-                <li className="relative flex items-center group">
-                  <button className="flex items-center px-3 py-4 lg:py-2 text-xs uppercase font-bold text-blueGray-700 focus:outline-none">
+                <li className="relative flex items-center" ref={dropdownRef}>
+                  <button
+                    className="flex items-center px-3 py-4 lg:py-2 text-xs uppercase font-bold text-blueGray-700 focus:outline-none"
+                    onClick={() => setClientDropdownOpen(!clientDropdownOpen)}
+                  >
                     <img
                       src={user.user_image || "https://i.pravatar.cc/40"}
                       alt="avatar"
                       className="w-8 h-8 rounded-full"
                     />
                   </button>
-                  <ul className="absolute right-0 top-12 bg-white shadow-md rounded hidden group-hover:block z-50 min-w-[140px]">
-                    <li>
-                      <Link
-                        to="/profile"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        Mon profil
-                      </Link>
-                    </li>
-                    <li>
-                      <button
-                        onClick={handleLogout}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        Déconnexion
-                      </button>
-                    </li>
-                  </ul>
+                  {clientDropdownOpen && (
+                    <ul className="absolute right-0 top-12 bg-white shadow-md rounded z-50 min-w-[140px]">
+                      <li>
+                        <Link
+                          to="/profile"
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          onClick={() => setClientDropdownOpen(false)}
+                        >
+                          Mon profil
+                        </Link>
+                      </li>
+                      <li>
+                        <button
+                          onClick={() => {
+                            setClientDropdownOpen(false);
+                            handleLogout();
+                          }}
+                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          Déconnexion
+                        </button>
+                      </li>
+                    </ul>
+                  )}
                 </li>
               )}
 

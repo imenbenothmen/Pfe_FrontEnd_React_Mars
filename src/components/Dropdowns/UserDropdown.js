@@ -95,6 +95,23 @@ const UserDropdown = () => {
       >
         {user && user.role === "admin" ? (
           <>
+
+
+            <Link
+              to="/profile"
+              className="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700 hover:bg-gray-100"
+              onClick={closeDropdownPopover}
+            >
+              Mon profile
+            </Link>
+            <Link
+              to="/welcome"
+              className="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700 hover:bg-gray-100"
+              onClick={closeDropdownPopover}
+            >
+              page d'accueil
+            </Link>
+
             <Link
               to="/admin/tables"
               className="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700 hover:bg-gray-100"

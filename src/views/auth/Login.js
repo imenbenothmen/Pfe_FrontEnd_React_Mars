@@ -41,7 +41,7 @@ export default function Login() {
   if (data.user.role === 'admin') {
     history.push('/admin/Tables'); // (à créer après)
   } else {
-    history.push('/profile'); // (client)
+    history.push('/welcome'); // (client)
   }
       } else {
         // Erreur dans les informations de connexion
