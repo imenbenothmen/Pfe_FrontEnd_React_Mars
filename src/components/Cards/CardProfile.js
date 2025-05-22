@@ -39,13 +39,13 @@ export default function CardProfile({ data, editMode, onEdit, onCancel, onUpdate
             <button
               type="button"
               onClick={onCancel}
-              className="mr-4 px-5 py-2 bg-red-500 text-white font-semibold rounded hover:bg-red-600 transition"
+              className="mr-4 px-5 py-2 border-2 border-pink-500 text-pink-500 font-semibold rounded-full bg-white hover:bg-pink-50 transition"
             >
               Annuler
             </button>
             <button
               type="submit"
-              className="px-5 py-2 bg-lightBlue-500 text-white font-semibold rounded hover:bg-lightBlue-600 transition"
+              className="px-5 py-2 border-2 border-pink-500 text-pink-500 font-semibold rounded-full bg-white hover:bg-pink-50 transition"
             >
               Sauvegarder
             </button>
@@ -82,7 +82,7 @@ export default function CardProfile({ data, editMode, onEdit, onCancel, onUpdate
           <div className="w-full lg:w-9/12 px-4 mx-auto">
             <button
               onClick={onEdit}
-              className="inline-block px-6 py-3 bg-lightBlue-500 text-white font-semibold rounded-md shadow hover:bg-lightBlue-600 transition"
+              className="inline-block px-6 py-3 border-2 border-pink-500 text-pink-500 font-semibold rounded-full bg-white shadow hover:bg-pink-50 transition"
             >
               Modifier le profil
             </button>
