@@ -78,12 +78,6 @@ export default function Login() {
           width: 200%;
           height: 200%;
           background: radial-gradient(ellipse, rgba(185, 157, 98, 0.08) 0%, transparent 70%);
-          animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-20px) rotate(180deg); }
         }
 
         .login-card {

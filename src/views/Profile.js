@@ -50,6 +50,9 @@ export default function Profile() {
           overflow: hidden;
           border-bottom: 1px solid #e8e3dd;
         }
+        .profile-page {
+          background: none; /* Remove the blue background */
+        }
         .hero-section-profile::before {
           content: '';
           position: absolute;
@@ -58,11 +61,6 @@ export default function Profile() {
           width: 200%;
           height: 200%;
           background: radial-gradient(ellipse, rgba(185, 157, 98, 0.08) 0%, transparent 70%);
-          animation: float 6s ease-in-out infinite;
-        }
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-20px) rotate(180deg); }
         }
         .hero-content-profile {
           position: relative;
@@ -102,13 +100,11 @@ export default function Profile() {
         <section className="hero-section-profile">
           <div className="hero-content-profile">
             <h1 className="hero-title-profile">Mon Profil</h1>
-            <p className="hero-subtitle-profile">
-              Retrouvez et modifiez vos informations personnelles en toute élégance.
-            </p>
+            
           </div>
         </section>
         <main className="profile-page">
-          <section className="relative py-16 bg-blueGray-200">
+          <section className="relative py-16">
             <div className="container mx-auto px-4">
               <CardProfile
                 data={profileData}

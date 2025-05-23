@@ -3,95 +3,298 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 // components
-
 import PagesDropdown from "components/Dropdowns/PagesDropdown.js";
 
 export default function Navbar(props) {
   const [navbarOpen, setNavbarOpen] = React.useState(false);
+  const [isScrolled, setIsScrolled] = React.useState(false);
+
+  // Gestion du scroll pour l'effet de transparence
+  React.useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <>
-      <nav className="top-0 absolute z-50 w-full flex flex-wrap items-center justify-between px-2 py-3 navbar-expand-lg">
-        <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
-          <div className="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
-            <Link
-              className="text-white text-sm font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase"
-              to="/"
-            >
-              KARMA JEWELLERY
+      <style jsx>{`
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
+
+        .luxury-auth-navbar {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          z-index: 1000;
+          width: 100%;
+          transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+          font-family: 'Inter', sans-serif;
+          backdrop-filter: blur(20px);
+        }
+
+        .navbar-transparent {
+          background: rgba(0, 0, 0, 0.1);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+          box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-scrolled {
+          background: rgba(0, 0, 0, 0.25);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+          box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .navbar-container {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 1rem 2rem;
+          max-width: 1400px;
+          margin: 0 auto;
+          transition: padding 0.3s ease;
+        }
+
+        .navbar-scrolled .navbar-container {
+          padding: 0.75rem 2rem;
+        }
+
+        .navbar-left {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+          position: relative;
+        }
+
+        .navbar-brand {
+          display: flex;
+          align-items: center;
+          text-decoration: none;
+          transition: transform 0.3s ease;
+        }
+
+        .navbar-brand:hover {
+          transform: scale(1.05);
+        }
+
+        .brand-logo {
+          width: 45px;
+          height: 45px;
+          background: linear-gradient(45deg, #d4c49a, #b99d62);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-right: 12px;
+          box-shadow: 0 4px 15px rgba(212, 196, 154, 0.4);
+          transition: all 0.3s ease;
+        }
+
+        .navbar-brand:hover .brand-logo {
+          box-shadow: 0 6px 25px rgba(212, 196, 154, 0.6);
+          transform: rotate(5deg);
+        }
+
+        .brand-icon {
+          color: white;
+          font-size: 20px;
+        }
+
+        .brand-text {
+          font-family: 'Playfair Display', serif;
+          font-size: 1.8rem;
+          font-weight: 700;
+          background: linear-gradient(45deg, #ffffff, #f8f6f3, #d4c49a);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          letter-spacing: -0.5px;
+        }
+
+        .mobile-menu-btn {
+          display: none;
+          flex-direction: column;
+          background: none;
+          border: none;
+          cursor: pointer;
+          padding: 0.5rem;
+          gap: 4px;
+        }
+
+        .mobile-menu-bar {
+          width: 25px;
+          height: 3px;
+          background: linear-gradient(45deg, #ffffff, #d4c49a);
+          border-radius: 2px;
+          transition: all 0.3s ease;
+        }
+
+        .mobile-menu-btn.active .mobile-menu-bar:nth-child(1) {
+          transform: rotate(45deg) translate(8px, 8px);
+        }
+
+        .mobile-menu-btn.active .mobile-menu-bar:nth-child(2) {
+          opacity: 0;
+        }
+
+        .mobile-menu-btn.active .mobile-menu-bar:nth-child(3) {
+          transform: rotate(-45deg) translate(8px, -8px);
+        }
+
+        .navbar-menu {
+          display: flex;
+          align-items: center;
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(20px);
+          border-radius: 15px;
+          box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+          transform: translateY(-100%);
+          opacity: 0;
+          visibility: hidden;
+          transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          margin-top: 1rem;
+        }
+
+        .navbar-menu.desktop {
+          position: static;
+          background: transparent;
+          backdrop-filter: none;
+          box-shadow: none;
+          transform: none;
+          opacity: 1;
+          visibility: visible;
+          margin-top: 0;
+          border-radius: 0;
+        }
+
+        .navbar-menu.open {
+          transform: translateY(0);
+          opacity: 1;
+          visibility: visible;
+        }
+
+        .navbar-menu-list {
+          display: flex;
+          flex-direction: column;
+          list-style: none;
+          margin: 0;
+          padding: 1rem;
+          width: 100%;
+          gap: 0.5rem;
+        }
+
+        .navbar-menu.desktop .navbar-menu-list {
+          flex-direction: row;
+          padding: 0;
+          gap: 1rem;
+          margin-left: auto;
+        }
+
+        .nav-item {
+          display: flex;
+          align-items: center;
+        }
+
+        /* Style pour PagesDropdown en mobile */
+        .navbar-menu:not(.desktop) .nav-item {
+          width: 100%;
+        }
+
+        /* Responsive Design */
+        @media (min-width: 1024px) {
+          .navbar-left {
+            width: auto;
+          }
+
+          .navbar-menu {
+            display: flex !important;
+          }
+
+          .navbar-menu.desktop {
+            display: flex;
+          }
+        }
+
+        @media (max-width: 1023px) {
+          .mobile-menu-btn {
+            display: flex;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .navbar-container {
+            padding: 1rem;
+          }
+          
+          .navbar-scrolled .navbar-container {
+            padding: 0.75rem 1rem;
+          }
+          
+          .brand-text {
+            font-size: 1.5rem;
+          }
+          
+          .brand-logo {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .brand-text {
+            font-size: 1.3rem;
+          }
+        }
+      `}</style>
+
+      <nav className={`luxury-auth-navbar ${isScrolled ? 'navbar-scrolled' : 'navbar-transparent'}`}>
+        <div className="navbar-container">
+          <div className="navbar-left">
+            {/* Brand */}
+            <Link to="/" className="navbar-brand">
+              <div className="brand-logo">
+                <i className="fas fa-gem brand-icon"></i>
+              </div>
+              <span className="brand-text">KARMA JEWELLERY</span>
             </Link>
-            <button
-              className="cursor-pointer text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block lg:hidden outline-none focus:outline-none"
-              type="button"
+
+            {/* Mobile Menu Button */}
+            <button 
+              className={`mobile-menu-btn ${navbarOpen ? 'active' : ''}`}
               onClick={() => setNavbarOpen(!navbarOpen)}
             >
-              <i className="text-white fas fa-bars"></i>
+              <div className="mobile-menu-bar"></div>
+              <div className="mobile-menu-bar"></div>
+              <div className="mobile-menu-bar"></div>
             </button>
           </div>
-          <div
-            className={
-              "lg:flex flex-grow items-center bg-white lg:bg-opacity-0 lg:shadow-none" +
-              (navbarOpen ? " block rounded shadow-lg" : " hidden")
-            }
-            id="example-navbar-warning"
-          >
-            {/* <ul className="flex flex-col lg:flex-row list-none mr-auto">
-              <li className="flex items-center">
-                <a
-                  className="lg:text-white lg:hover:text-blueGray-200 text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold"
-                  href="https://www.creative-tim.com/learning-lab/tailwind/react/overview/notus?ref=nr-auth-navbar"
-                >
-                  <i className="lg:text-blueGray-200 text-blueGray-400 far fa-file-alt text-lg leading-lg mr-2" />{" "}
-                  Docs
-                </a>
-              </li>
-            </ul> */}
-            <ul className="flex flex-col lg:flex-row list-none lg:ml-auto">
-              <li className="flex items-center">
+
+          {/* Desktop Menu */}
+          <div className="navbar-menu desktop">
+            <ul className="navbar-menu-list">
+              <li className="nav-item">
                 <PagesDropdown />
               </li>
-              {/* <li className="flex items-center">
-                <a
-                  className="lg:text-white lg:hover:text-blueGray-200 text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold"
-                  href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdemos.creative-tim.com%2Fnotus-react%2F%23%2F"
-                  target="_blank"
-                >
-                  <i className="lg:text-blueGray-200 text-blueGray-400 fab fa-facebook text-lg leading-lg " />
-                  <span className="lg:hidden inline-block ml-2">Share</span>
-                </a>
-              </li> */}
-
-              {/* <li className="flex items-center">
-                <a
-                  className="lg:text-white lg:hover:text-blueGray-200 text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold"
-                  href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fdemos.creative-tim.com%2Fnotus-react%2F%23%2F&text=Start%20your%20development%20with%20a%20Free%20Tailwind%20CSS%20and%20React%20UI%20Kit%20and%20Admin.%20Let%20Notus%20React%20amaze%20you%20with%20its%20cool%20features%20and%20build%20tools%20and%20get%20your%20project%20to%20a%20whole%20new%20level.%20"
-                  target="_blank"
-                >
-                  <i className="lg:text-blueGray-200 text-blueGray-400 fab fa-twitter text-lg leading-lg " />
-                  <span className="lg:hidden inline-block ml-2">Tweet</span>
-                </a>
-              </li> */}
-
-              {/* <li className="flex items-center">
-                <a
-                  className="lg:text-white lg:hover:text-blueGray-200 text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold"
-                  href="https://github.com/creativetimofficial/notus-react?ref=nr-auth-navbar"
-                  target="_blank"
-                >
-                  <i className="lg:text-blueGray-200 text-blueGray-400 fab fa-github text-lg leading-lg " />
-                  <span className="lg:hidden inline-block ml-2">Star</span>
-                </a>
-              </li> */}
-
-              {/* <li className="flex items-center">
-                <button
-                  className="bg-white text-blueGray-700 active:bg-blueGray-50 text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none lg:mr-1 lg:mb-0 ml-3 mb-3 ease-linear transition-all duration-150"
-                  type="button"
-                >
-                  <i className="fas fa-arrow-alt-circle-down"></i> Download
-                </button>
-              </li> */}
             </ul>
           </div>
+        </div>
+
+        {/* Mobile Menu */}
+        <div className={`navbar-menu ${navbarOpen ? 'open' : ''}`}>
+          <ul className="navbar-menu-list">
+            <li className="nav-item">
+              <PagesDropdown />
+            </li>
+          </ul>
         </div>
       </nav>
     </>
