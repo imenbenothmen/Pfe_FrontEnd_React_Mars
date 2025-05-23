@@ -33,6 +33,12 @@ export default function ProductDetails() {
   }, [id]);
 
   const addToCart = () => {
+    if (!currentUser) {
+      alert("Veuillez vous connecter pour ajouter des produits au panier.");
+      history.push("/auth/login");
+      return;
+    }
+
     const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
     const productIndex = existingCart.findIndex(item => item._id === product._id);
 

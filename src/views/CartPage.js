@@ -540,24 +540,58 @@ export default function CartPage() {
 
       <div className="luxury-container">
         <IndexNavbar />
-        
         <main>
-          {/* Hero Section */}
-          <section className="hero-section">
-            <div className="hero-content">
-              <h1 className="hero-title">Mon Panier</h1>
-              <p className="hero-subtitle">Vos sélections prestigieuses vous attendent</p>
-            </div>
-          </section>
-
-          {/* Main Content */}
           <section className="main-section">
             <div className="cart-container">
+              <h1
+                style={{
+                  fontFamily: "'Playfair Display', serif",
+                  fontSize: "2.5rem",
+                  fontWeight: 700,
+                  color: "#8b7355",
+                  marginBottom: "2.5rem",
+                  textAlign: "center",
+                  textShadow: "0 1px 2px rgba(139, 115, 85, 0.1)"
+                }}
+              >
+                Mon panier
+              </h1>
               {cart.length === 0 ? (
                 <div className="empty-cart">
                   <div className="empty-cart-icon">🛍️</div>
                   <p className="empty-cart-text">Votre panier est vide</p>
-                  <p style={{color: '#6b5b4f', fontStyle: 'italic'}}>Découvrez notre collection prestigieuse</p>
+                  <div style={{ marginTop: 30 }}>
+                    <a
+                      href="/"
+                      className="discover-btn"
+                      style={{
+                        display: "inline-block",
+                        padding: "16px 40px",
+                        background: "linear-gradient(45deg, #b99d62, #d4c49a)",
+                        color: "#fff",
+                        borderRadius: "30px",
+                        fontWeight: 600,
+                        fontSize: "1.2rem",
+                        fontFamily: "'Inter', sans-serif",
+                        boxShadow: "0 4px 15px rgba(185, 157, 98, 0.2)",
+                        textDecoration: "none",
+                        transition: "all 0.3s",
+                        letterSpacing: "1px"
+                      }}
+                      onMouseOver={e => {
+                        e.target.style.background = "linear-gradient(45deg, #a08854, #c9b086)";
+                        e.target.style.transform = "scale(1.05)";
+                        e.target.style.boxShadow = "0 10px 30px rgba(185, 157, 98, 0.4)";
+                      }}
+                      onMouseOut={e => {
+                        e.target.style.background = "linear-gradient(45deg, #b99d62, #d4c49a)";
+                        e.target.style.transform = "scale(1)";
+                        e.target.style.boxShadow = "0 4px 15px rgba(185, 157, 98, 0.2)";
+                      }}
+                    >
+                      Découvrir notre collection
+                    </a>
+                  </div>
                 </div>
               ) : showForm ? (
                 // FORMULAIRE DE COMMANDE
@@ -684,7 +718,6 @@ export default function CartPage() {
             </div>
           </section>
         </main>
-        
         <Footer />
       </div>
     </>

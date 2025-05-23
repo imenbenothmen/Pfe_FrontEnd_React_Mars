@@ -34,7 +34,7 @@ export async function getOrdersByClient(clientId) {
 
 // PUT – Update the status of an order
 export async function updateOrderStatus(orderId, data) {
-  return await axios.put(`${apiUrl}${orderId}/status`, data);
+  return await axios.put(`${apiUrl}/${orderId}/status`, data);
 }
 
 // PUT – Cancel an order

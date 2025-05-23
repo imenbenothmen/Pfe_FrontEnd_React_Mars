@@ -391,14 +391,7 @@ export default function Landing() {
         <Navbar transparent />
         
         <main>
-          {/* Hero Section */}
-          <section className="hero-section">
-            <div className="hero-content">
-              <h1 className="hero-title">Collection Prestigieuse</h1>
-              <p className="hero-subtitle">Découvrez l'élégance intemporelle de nos créations uniques</p>
-            </div>
-          </section>
-
+          {/* Hero Section supprimée */}
           {/* Categories Section */}
           <section className="categories-section">
             <div className="container mx-auto px-4">
@@ -428,7 +421,6 @@ export default function Landing() {
               </div>
             </div>
           </section>
-
           {/* Products Section */}
           <section className="products-section">
             <div className="container mx-auto px-4">

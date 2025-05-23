@@ -45,7 +45,7 @@ export default function OrderAndComplaintManagement() {
             <td>
               <span
                 className={`luxury-status ${
-                  order.status === "traitée" ? "done" : "pending"
+                  order.status === "traitée" ? "done" : "En attente"
                 }`}
               >
                 {order.status}
@@ -60,7 +60,7 @@ export default function OrderAndComplaintManagement() {
                   Marquer comme traitée
                 </button>
               )}
-              <button className="luxury-btn yellow">Éditer</button>
+              <button className="luxury-btn yellow">Modifier</button>
             </td>
           </tr>
         ))}
